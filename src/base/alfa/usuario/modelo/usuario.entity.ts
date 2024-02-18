@@ -1,5 +1,5 @@
-import { Entity, Column, OneToMany, BeforeInsert, BeforeUpdate, getConnection } from 'typeorm';
-import { ArrayMinSize, IsArray, IsBoolean, IsInt, IsNotEmpty, IsNumber, IsOptional, IsUrl, Length, ValidateNested, isURL } from 'class-validator';
+import { Entity, Column, OneToMany } from 'typeorm';
+import { ArrayMinSize, IsArray, IsBoolean, IsInt, IsNotEmpty, IsNumber, IsOptional, IsUrl, Length, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 import { Base, BaseTabela_ } from 'src/base/base';
@@ -33,7 +33,7 @@ export class Usuario extends Base {
   situacao: UsuarioSituacao;
 
   @IsOptional()
-  @IsNumber()
+  @IsBoolean()
   @Column('boolean', { nullable: false })
   atuante: boolean;
 

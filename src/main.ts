@@ -13,7 +13,6 @@ async function bootstrap() {
   );
   app.register(compression, { encodings: ['gzip', 'deflate'] });
   app.useGlobalPipes(new ValidationPipe());
-  const types = require('pg').types;
   const config = new DocumentBuilder()
     .setTitle('Aurora API')
     .build();

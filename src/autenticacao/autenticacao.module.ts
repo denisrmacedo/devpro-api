@@ -6,6 +6,7 @@ import { AutenticacaoGuard } from './autenticacao.guard';
 import { AutenticacaoService } from './autenticacao.service';
 import { AutenticacaoController } from './autenticacao.controller';
 import { UsuarioModule } from 'src/base/alfa/usuario/usuario.module';
+import { SessaoModule } from 'src/base/seguranca/sessao/sessao.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { UsuarioModule } from 'src/base/alfa/usuario/usuario.module';
       },
     }),
     UsuarioModule,
+    SessaoModule,
   ],
   providers: [
     {

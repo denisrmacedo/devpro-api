@@ -4,5 +4,9 @@ export interface Identificacao {
   usuario: {
     id: string;
     nome: string;
+  },
+  sessao: {
+    id: string;
+    inicio: Date;
   }
 }

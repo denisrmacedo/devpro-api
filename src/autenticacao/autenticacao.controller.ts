@@ -1,8 +1,9 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Ip, Post, Request } from '@nestjs/common';
 
 import { Public } from './public.decorator';
 import { Identificacao } from './identificacao';
 import { AutenticacaoService } from './autenticacao.service';
+import { Credencial } from './credencial';
 
 @Controller('autenticacao')
 export class AutenticacaoController {
@@ -11,8 +12,9 @@ export class AutenticacaoController {
   @HttpCode(HttpStatus.OK)
   @Public()
   @Post()
-  conecta(@Body() credencial: { email: string, senha: string }): Promise<{ identificacao: Identificacao, token: string }> {
-    return this.autenticacaoService.conecta(credencial.email, credencial.senha);
+  conecta(@Body() credencial: Credencial, @Ip() ip: string): Promise<{ identificacao: Identificacao, token: string }> {
+    credencial.ip = ip;
+    return this.autenticacaoService.conecta(credencial);
   }
 
   @Get()

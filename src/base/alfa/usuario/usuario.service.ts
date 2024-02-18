@@ -75,8 +75,9 @@ export class UsuarioService {
     const options: FindManyOptions<Usuario> = {
       order: { situacao: 1, nome: 1 },
     };
+    options.where = [];
     if (criterios.chave)
-      options.where = { usuarioCredenciais: { chave: criterios.chave } };
+      options.where.push({ usuarioCredenciais: { chave: criterios.chave } });
     return this.replicaRepository.find(options);
   }
 
@@ -84,7 +85,7 @@ export class UsuarioService {
     const usuario = await this.assistente.cache.get<Usuario>(id);
     if (usuario)
       return usuario;
-    return this.principalRepository.findOneOrFail({ where: { id } })
+    return this.principalRepository.findOneByOrFail({ id })
       .then(usuario => {
         this.assistente.cache.set(usuario.id, usuario);
         return usuario;
@@ -98,7 +99,7 @@ export class UsuarioService {
     });
     for (const usuarioCredencial of usuario.usuarioCredenciais) {
       await this.assistente.unico(this.principalRepository, { usuarioCredencial }, {
-        chave: 'chave',
+        chave: 'chave'
       });
       if (!usuarioCredencial.senha.startsWith('$')) {
         usuarioCredencial.senha = await bcrypt.hash(usuarioCredencial.senha, 10);
