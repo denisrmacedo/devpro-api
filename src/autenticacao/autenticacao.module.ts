@@ -1,19 +1,32 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
+
+import { AutenticacaoGuard } from './autenticacao.guard';
 import { AutenticacaoService } from './autenticacao.service';
 import { AutenticacaoController } from './autenticacao.controller';
-import { UsuarioModule } from 'src/usuario/usuario.module';
+import { UsuarioModule } from 'src/base/alfa/usuario/usuario.module';
 
 @Module({
   imports: [
-    JwtModule.register({
-      global: true,
-      secret: 'segredo',
-      signOptions: { expiresIn: '24h' },
+    JwtModule.registerAsync({
+      useFactory: () => {
+        return {
+          global: true,
+          secret: process.env.JWT_KEY,
+          signOptions: { expiresIn: '24h' },
+        };
+      },
     }),
     UsuarioModule,
   ],
-  providers: [AutenticacaoService],
-  controllers: [AutenticacaoController]
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AutenticacaoGuard,
+    },
+    AutenticacaoService,
+  ],
+  controllers: [AutenticacaoController],
 })
 export class AutenticacaoModule {}
