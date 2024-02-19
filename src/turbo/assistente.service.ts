@@ -3,6 +3,9 @@ import { Repository } from 'typeorm';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 
+import { Identificacao } from 'src/autenticacao/identificacao';
+import { Base, Modelo, Procedimento } from 'src/base/base';
+
 export class Pagina<T> {
   numero: number;
   paginas: number;
@@ -67,8 +70,12 @@ export class AssistenteService {
   async unico<T>(repository: Repository<T>, referencia: Record<string, object>, propriedades: Record<string, string>): Promise<void> {
     if ((Object.keys(referencia).length) !== 1)
       this.parametroInvalido('referencia');
-    var tabela: string;
+    var esquema = '';
+    var tabela = '';
     var instancia: object;
+    const segmentos = repository.metadata.tableName.split('.');
+    if (segmentos.length === 2)
+      esquema = segmentos[0];
     for (const chave in referencia) {
       tabela = chave;
       instancia = referencia[chave];
@@ -83,7 +90,7 @@ export class AssistenteService {
       const id = instancia['id'] ?? this._guidZero;
       const consulta: string[] = [];
       consulta.push(`SELECT count(*) "quantidade"`);
-      consulta.push(`FROM "${tabela.split('.').join('"."')}"`);
+      consulta.push(`FROM "${esquema}"."${tabela}"`);
       consulta.push(`WHERE`);
       if (typeof(valor) === 'string')
         consulta.push(`  (versal("${chave}") = versal('${valor}'))`);
@@ -118,9 +125,27 @@ export class AssistenteService {
     return consulta.join(' ');
   }
 
-  audita(): void {
-
+  async audita<T extends Base>(identificacao: Identificacao, repository: Repository<T>, instancia: T, modelo: Modelo, referencia: number | boolean, descricao: string): Promise<void> {
+    referencia ??= null;
+    var procedimento = Procedimento.Adicao;
+    if (!referencia)
+      procedimento = Procedimento.Adicao;
+    if (typeof(referencia) === 'boolean')
+      procedimento = referencia ? Procedimento.Adicao : Procedimento.Edicao;
+    if (typeof(referencia) === 'number')
+      procedimento = referencia;
+    const consulta: string[] = [];
+    consulta.push(`INSERT INTO seguranca.auditoria`);
+    consulta.push(`  (id, adicao, edicao, versao, "usuarioId", "sessaoId", fuso, momento, procedimento, instancia, "instanciaId", "instanciaModelo", "instanciaDescricao")`);
+    consulta.push(`VALUES`);
+    consulta.push(`  (default, default, default, 1, '${identificacao.usuario.id}', '${identificacao.sessao.id}', '${identificacao.fuso || 'UTC+0'}', now(), ${procedimento}, '${JSON.stringify(instancia)}', '${instancia.id}', '${modelo}', '${descricao}');`);
+    await repository.query(consulta.join('\n'));
   }
+
+  async auditaExclusao<T extends Base>(identificacao: Identificacao, repository: Repository<T>, instancia: T, modelo: Modelo, descricao: string): Promise<void> {
+    await this.audita<T>(identificacao, repository, instancia, modelo, Procedimento.Remocao, descricao);
+  }
+
 
   conflito(mensagem: string): void {
     throw new ConflictException(mensagem);

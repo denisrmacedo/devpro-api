@@ -8,5 +8,6 @@ export interface Identificacao {
   sessao: {
     id: string;
     inicio: Date;
-  }
+  },
+  fuso: string;
 }

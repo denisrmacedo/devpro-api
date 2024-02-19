@@ -51,7 +51,8 @@ export class AutenticacaoService {
       sessao: {
         id: sessao.id,
         inicio: sessao.inicio,
-      }
+      },
+      fuso: sessao.fuso,
     };
     return { identificacao, token: await this.jwtService.signAsync(identificacao) };
   }

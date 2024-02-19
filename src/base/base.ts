@@ -14,7 +14,11 @@ export class Base {
   remocao: Date;
 
   @VersionColumn()
-  versao: number
+  versao: number;
+
+  get novo(): boolean {
+    return !!this.id;
+  }
 }
 
 export class BaseTabela_ {
@@ -26,4 +30,26 @@ export class BaseTabela_ {
 
   @Column()
   nome: string;
+}
+
+export class BaseMovimento_ {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  codigo: string;
+}
+
+export enum Modelo {
+  Usuario = +'010100',
+}
+
+/*
+esquema alfa = 01
+*/
+
+export enum Procedimento {
+  Adicao = 1,
+  Edicao = 2,
+  Remocao = 3,
 }

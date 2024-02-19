@@ -1,8 +1,10 @@
 import { createParamDecorator, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
 
+import { Identificacao } from './identificacao';
+
 export const Auth = createParamDecorator(
-  (data: any, context: ExecutionContext) => {
+  (data: any, context: ExecutionContext): Identificacao => {
     const request = context.switchToHttp().getRequest<Request>();
     const identificacao = request['identificacao'];
     if (!identificacao) {

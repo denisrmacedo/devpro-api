@@ -79,7 +79,7 @@ export enum UsuarioGenero {
   NaoInformado = 9,
 }
 
-@Entity('usuario')
+@Entity('alfa.usuario')
 export class Usuario_ extends BaseTabela_ {
   @Column()
   imagem: string;

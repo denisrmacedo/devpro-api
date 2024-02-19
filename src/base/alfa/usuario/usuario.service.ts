@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { Identificacao } from 'src/autenticacao/identificacao';
 import { AssistenteService, Pagina } from 'src/turbo/assistente.service';
 import { Usuario, UsuarioSituacao } from './modelo/usuario.entity';
+import { Modelo } from 'src/base/base';
 
 @Injectable()
 export class UsuarioService {
@@ -13,7 +14,7 @@ export class UsuarioService {
     @InjectRepository(Usuario, 'principal') private readonly principalRepository: Repository<Usuario>,
     @InjectRepository(Usuario, 'replica') private readonly replicaRepository: Repository<Usuario>,
     private readonly assistente: AssistenteService,
-  ) {}
+  ) { }
 
   async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<Usuario>> {
     this.assistente.adapta(criterios);
@@ -64,7 +65,7 @@ export class UsuarioService {
 
   async lista(identificacao: Identificacao, criterios: any): Promise<Usuario[]> {
     const options: FindManyOptions<Usuario> = {
-      select: { id: true,  nome: true, imagem: true, situacao: true },
+      select: { id: true, nome: true, imagem: true, situacao: true },
       order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,
     };
@@ -105,10 +106,12 @@ export class UsuarioService {
         usuarioCredencial.senha = await bcrypt.hash(usuarioCredencial.senha, 10);
       }
     }
+    const novo = usuario.novo;
     return this.principalRepository
       .save(usuario)
-      .then(usuario => {
-        this.assistente.cache.set(usuario.id, usuario);
+      .then(async usuario => {
+        await this.assistente.cache.set(usuario.id, usuario);
+        await this.assistente.audita(identificacao, this.principalRepository, usuario, Modelo.Usuario, novo, 'Usuário: ' + usuario.nome);
         return usuario;
       });
   }
@@ -117,8 +120,9 @@ export class UsuarioService {
     const usuario = await this.capta(identificacao, id);
     return await this.principalRepository
       .softRemove(usuario)
-      .then(usuario => {
-        this.assistente.cache.del(usuario.id);
+      .then(async usuario => {
+        await this.assistente.cache.del(usuario.id);
+        await this.assistente.auditaExclusao(identificacao, this.principalRepository, usuario, Modelo.Usuario, 'Usuário: ' + usuario.nome);
         return usuario;
       })
   }

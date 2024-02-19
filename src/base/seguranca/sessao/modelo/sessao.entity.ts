@@ -1,8 +1,8 @@
 import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
 import { IsDateString, IsIP, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, Length } from 'class-validator';
 
-import { Base } from 'src/base/base';
-import { Usuario } from 'src/base/alfa/usuario/modelo/usuario.entity';
+import { Base, BaseMovimento_ } from 'src/base/base';
+import { Usuario_ } from 'src/base/alfa/usuario/modelo/usuario.entity';
 
 @Entity('seguranca.sessao')
 export class Sessao extends Base {
@@ -18,9 +18,9 @@ export class Sessao extends Base {
 
   @IsNotEmpty()
   @IsObject()
-  @OneToOne(() => Usuario, { eager: true })
+  @OneToOne(() => Usuario_, { eager: true })
   @JoinColumn()
-  usuario: Usuario;
+  usuario: Usuario_;
 
   @IsNotEmpty()
   @IsIP()
@@ -57,3 +57,6 @@ export enum SessaoSituacao {
   Ativa = 1,
   Concluida = 7,
 }
+
+@Entity('seguranca.sessao')
+export class Sessao_ extends BaseMovimento_ { }
