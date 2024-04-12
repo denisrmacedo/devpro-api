@@ -15,7 +15,7 @@ export class AutenticacaoService {
     private readonly sessaoService: SessaoService,
   ) {}
 
-  async conecta(credencial: Credencial): Promise<{ identificacao: Identificacao, token: string }> {
+  async conecta(credencial: Credencial): Promise<Identificacao> {
     const usuarios = await this.usuarioService.procura(null, { chave: credencial.email });
     if (!usuarios?.length)
       throw new UnauthorizedException('usuário inválido');
@@ -47,13 +47,17 @@ export class AutenticacaoService {
       usuario: {
         id: usuario.id,
         nome: usuario.nome,
+        email: credencial.email,
       },
       sessao: {
         id: sessao.id,
         inicio: sessao.inicio,
       },
       fuso: sessao.fuso,
+      token: null,
     };
-    return { identificacao, token: await this.jwtService.signAsync(identificacao) };
+    delete identificacao.token;
+    identificacao.token = await this.jwtService.signAsync(identificacao);
+    return identificacao;
   }
 }

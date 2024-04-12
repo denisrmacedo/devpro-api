@@ -12,13 +12,17 @@ export class AutenticacaoController {
   @HttpCode(HttpStatus.OK)
   @Public()
   @Post()
-  conecta(@Body() credencial: Credencial, @Ip() ip: string): Promise<{ identificacao: Identificacao, token: string }> {
+  conecta(@Body() credencial: Credencial, @Ip() ip: string): Promise<Identificacao> {
     credencial.ip = ip;
     return this.autenticacaoService.conecta(credencial);
   }
 
   @Get()
-  identificacao(@Request() request: any) {
-    return request.identificacao;
+  identificacao(@Request() request: any): Promise<Identificacao> {
+    // melhorar esse tratamento
+    return {
+      ...request.identificacao,
+      token: request.token,
+    };
   }
 }

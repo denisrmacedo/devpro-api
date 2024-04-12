@@ -4,10 +4,12 @@ export interface Identificacao {
   usuario: {
     id: string;
     nome: string;
+    email: string;
   },
   sessao: {
     id: string;
     inicio: Date;
   },
   fuso: string;
+  token: string | null;
 }

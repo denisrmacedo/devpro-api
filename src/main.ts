@@ -12,6 +12,7 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
   app.register(compression, { encodings: ['gzip', 'deflate'] });
+  app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
     .setTitle('Aurora API')
