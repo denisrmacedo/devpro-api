@@ -164,3 +164,7 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# Backup files
+Insomnia_2024-05-28.yaml
+recursos/wiltomar-aurora.sql
