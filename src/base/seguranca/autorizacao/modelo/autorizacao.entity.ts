@@ -3,24 +3,31 @@ import { IsDateString, IsIP, IsNotEmpty, IsNumber, IsObject, IsOptional, IsStrin
 
 import { Base, BaseMovimento_ } from 'src/base/base';
 import { Usuario_ } from 'src/base/alfa/usuario/modelo/usuario.entity';
+import { Empresa_ } from 'src/base/alfa/empresa/modelo/empresa.entity';
 
-@Entity('seguranca.sessao')
-export class Sessao extends Base {
+@Entity('seguranca.autorizacao')
+export class Autorizacao extends Base {
   @IsNotEmpty()
   @IsNumber()
   @Column('smallint', { nullable: false })
-  situacao: SessaoSituacao;
+  situacao: AutorizacaoSituacao;
 
   @IsOptional()
   @IsNumber()
   @Column('boolean', { nullable: false })
-  operacional: boolean;
+  atuante: boolean;
 
   @IsNotEmpty()
   @IsObject()
   @OneToOne(() => Usuario_, { eager: true })
   @JoinColumn()
   usuario: Usuario_;
+
+  @IsNotEmpty()
+  @IsObject()
+  @OneToOne(() => Empresa_, { eager: true })
+  @JoinColumn()
+  empresa: Empresa_;
 
   @IsNotEmpty()
   @IsIP()
@@ -40,7 +47,7 @@ export class Sessao extends Base {
   @IsOptional()
   @IsString() @Length(20)
   @Column('varchar', { nullable: false })
-  fuso: string;
+  horario: string;
 
   @IsNotEmpty()
   @IsDateString()
@@ -53,10 +60,10 @@ export class Sessao extends Base {
   conclusao: Date;
 }
 
-export enum SessaoSituacao {
+export enum AutorizacaoSituacao {
   Ativa = 1,
   Concluida = 7,
 }
 
-@Entity('seguranca.sessao')
-export class Sessao_ extends BaseMovimento_ { }
+@Entity('seguranca.autorizacao')
+export class Autorizacao_ extends BaseMovimento_ { }

@@ -1,4 +1,11 @@
-import { BadRequestException, ConflictException, Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  BadRequestException,
+  ConflictException,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
@@ -14,16 +21,16 @@ export class Pagina<T> {
 
 @Injectable()
 export class AssistenteService {
-  private _principal = (process.env.PRINCIPAL === '1');
+  private readonly _principal = (process.env.principal === '1');
   private readonly _guidZero = '00000000-0000-0000-0000-000000000000';
 
   constructor(
     @Inject(CACHE_MANAGER)
     private readonly cacheService: Cache,
-  ) {}
+  ) { }
 
   get principal(): boolean {
-    return this.principal;
+    return this._principal;
   }
 
   get guidZero(): string {
@@ -51,12 +58,16 @@ export class AssistenteService {
         criterios.numero = +busca;
       } else if (busca.includes('@')) {
         criterios.email = busca;
-      } else
+      } else {
         criterios.nome = busca.toLowerCase().replaceAll('*', '%') + '%';
+      }
     }
     const selecao = criterios.selecao;
     if ((typeof (selecao) === 'string') && ['ativo', 'inerte', 'destaque', 'recente'].includes(selecao)) {
       criterios[selecao] = true;
+    }
+    if (+criterios.atuante === 1) {
+      criterios.situacao = 1;
     }
   }
   pagina<T>(criterios: any, contagem: number, linhas: T[]): Pagina<T> {
@@ -68,57 +79,66 @@ export class AssistenteService {
   }
 
   async unico<T>(repository: Repository<T>, referencia: Record<string, object>, propriedades: Record<string, string>): Promise<void> {
-    if ((Object.keys(referencia).length) !== 1)
+    if ((Object.keys(referencia).length) !== 1) {
       this.parametroInvalido('referencia');
+    }
     var esquema = '';
     var tabela = '';
     var instancia: object;
     const segmentos = repository.metadata.tableName.split('.');
-    if (segmentos.length === 2)
+    if (segmentos.length === 2) {
       esquema = segmentos[0];
+    }
     for (const chave in referencia) {
       tabela = chave;
       instancia = referencia[chave];
     }
     for (const chave in propriedades) {
-      if (!propriedades.hasOwnProperty(chave))
+      if (!propriedades.hasOwnProperty(chave)) {
         continue;
+      }
       const campo = propriedades[chave];
-      if ((chave === 'numero') && (+referencia < 0))
+      if ((chave === 'numero') && (+referencia < 0)) {
         continue;
+      }
       var valor = instancia[chave];
       const id = instancia['id'] ?? this._guidZero;
       const consulta: string[] = [];
       consulta.push(`SELECT count(*) "quantidade"`);
       consulta.push(`FROM "${esquema}"."${tabela}"`);
       consulta.push(`WHERE`);
-      if (typeof(valor) === 'string')
+      if (typeof(valor) === 'string') {
         consulta.push(`  (versal("${chave}") = versal('${valor}'))`);
-      else
+      } else {
         consulta.push(`  ("${chave}" = ${valor})`);
+      }
       consulta.push(`  AND ("id" <> '${id}')`);
       consulta.push(`  AND ("remocao" IS NULL);`);
       const [{ quantidade }] = await repository.query(consulta.join('\n'));
-      if (+quantidade)
+      if (+quantidade) {
         this.conflito(`já existe um registro com o campo ${campo} = ${valor}`);
+      }
     }
     return;
   }
 
   consultaIds(tabela: string, campo: string, criterios: Record<string, string>): string {
-    if (!Object.keys(criterios).length)
+    if (!Object.keys(criterios).length) {
       this.parametroInvalido('criterios');
+    }
     const consulta: string[] = [];
     consulta.push(`SELECT "${campo}"`);
     consulta.push(`FROM "${tabela.split('.').join('"."')}"`);
     consulta.push(`WHERE`);
     var conectivo = '';
     for (const chave in criterios) {
-      if (!criterios.hasOwnProperty(chave))
+      if (!criterios.hasOwnProperty(chave)) {
         continue;
+      }
       var valor = criterios[chave];
-      if (typeof(valor) === 'string')
+      if (typeof(valor) === 'string') {
         valor = `'${valor}'`;
+      }
       consulta.push(`  ${conectivo}("${chave}" = ${valor})`);
     }
     consulta.push(`  AND ("remocao" IS NULL)`);
@@ -128,17 +148,20 @@ export class AssistenteService {
   async audita<T extends Base>(identificacao: Identificacao, repository: Repository<T>, instancia: T, modelo: Modelo, referencia: number | boolean, descricao: string): Promise<void> {
     referencia ??= null;
     var procedimento = Procedimento.Adicao;
-    if (!referencia)
+    if (!referencia) {
       procedimento = Procedimento.Adicao;
-    if (typeof(referencia) === 'boolean')
+    }
+    if (typeof(referencia) === 'boolean') {
       procedimento = referencia ? Procedimento.Adicao : Procedimento.Edicao;
-    if (typeof(referencia) === 'number')
+    }
+    if (typeof(referencia) === 'number') {
       procedimento = referencia;
+    }
     const consulta: string[] = [];
     consulta.push(`INSERT INTO seguranca.auditoria`);
-    consulta.push(`  (id, adicao, edicao, versao, "usuarioId", "sessaoId", fuso, momento, procedimento, instancia, "instanciaId", "instanciaModelo", "instanciaDescricao")`);
+    consulta.push(`  (id, adicao, edicao, versao, "usuarioId", "autorizacaoId", horario, momento, procedimento, instancia, "instanciaId", "instanciaModelo", "instanciaDescricao")`);
     consulta.push(`VALUES`);
-    consulta.push(`  (default, default, default, 1, '${identificacao.usuario.id}', '${identificacao.sessao.id}', '${identificacao.fuso || 'UTC+0'}', now(), ${procedimento}, '${JSON.stringify(instancia)}', '${instancia.id}', '${modelo}', '${descricao}');`);
+    consulta.push(`  (default, default, default, 1, '${identificacao.usuario.id}', '${identificacao.id}', '${identificacao.horario || 'UTC+0'}', now(), ${procedimento}, '${JSON.stringify(instancia)}', '${instancia.id}', '${modelo}', '${descricao}');`);
     await repository.query(consulta.join('\n'));
   }
 
@@ -153,6 +176,10 @@ export class AssistenteService {
 
   incoerencia(mensagem: string): void {
     throw new BadRequestException(mensagem);
+  }
+
+  vetado(mensagem: string): void {
+    throw new UnauthorizedException(mensagem);
   }
 
   parametroAusente(parametro: string): void {

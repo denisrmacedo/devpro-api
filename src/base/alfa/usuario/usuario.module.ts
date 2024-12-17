@@ -1,21 +1,22 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AssistenteService } from 'src/turbo/assistente.service';
+import { TurboModule } from 'src/turbo/turbo.module';
 import { Usuario } from './modelo/usuario.entity';
 import { UsuarioService } from './usuario.service';
 import { UsuarioController } from './usuario.controller';
 
+
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Usuario], 'principal'),
-    TypeOrmModule.forFeature([Usuario], 'replica'),
+    TypeOrmModule.forFeature([Usuario], 'gravacao'),
+    TypeOrmModule.forFeature([Usuario], 'leitura'),
+    TurboModule,
   ],
   exports: [
     UsuarioService,
   ],
   providers: [
-    AssistenteService,
     UsuarioService,
   ],
   controllers: [

@@ -10,24 +10,24 @@ export class AutenticacaoGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
     ]);
-    if (isPublic)
+    if (isPublic) {
       return true;
+    }
     const request = context.switchToHttp().getRequest<Request>();
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    if ((type !== 'Bearer') || !token)
+    if ((type !== 'Bearer') || !token) {
       throw new UnauthorizedException();
+    }
     try {
       const identificacao = await this.jwtService.verifyAsync(
-        token, {
-          secret: process.env.JWT_KEY,
-        },
+        token, { secret: process.env.JWT_KEY },
       );
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers

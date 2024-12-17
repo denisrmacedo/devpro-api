@@ -1,9 +1,9 @@
 import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
-import { IsDateString, IsJSON, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, IsUUID, Length } from 'class-validator';
+import { IsDateString, IsJSON, IsNotEmpty, IsNumber, IsObject, IsString, IsUUID, Length } from 'class-validator';
 
 import { Base, Modelo } from 'src/base/base';
 import { Usuario_ } from 'src/base/alfa/usuario/modelo/usuario.entity';
-import { Sessao_ } from '../../sessao/modelo/sessao.entity';
+import { Autorizacao_ } from '../../autorizacao/modelo/autorizacao.entity';
 
 @Entity('seguranca.auditoria')
 export class Auditoria extends Base {
@@ -15,14 +15,14 @@ export class Auditoria extends Base {
 
   @IsNotEmpty()
   @IsObject()
-  @OneToOne(() => Sessao_, { eager: true })
+  @OneToOne(() => Autorizacao_, { eager: true })
   @JoinColumn()
-  sessao: Sessao_;
+  autorizacao: Autorizacao_;
 
   @IsNotEmpty()
   @IsString() @Length(20)
   @Column('varchar', { nullable: false })
-  fuso: string;
+  horario: string;
 
   @IsNotEmpty()
   @IsDateString()

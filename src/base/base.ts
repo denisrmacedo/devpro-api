@@ -42,10 +42,14 @@ export class BaseMovimento_ {
 
 export enum Modelo {
   Usuario = +'010100',
+  Empresa = +'010200',
+  Servidor = +'710100',
 }
 
 /*
-esquema alfa = 01
+  Esquema
+    Alfa = 01
+    Sistema = 71
 */
 
 export enum Procedimento {

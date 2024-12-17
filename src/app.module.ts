@@ -7,6 +7,8 @@ import { AppService } from './app.service';
 import { BaseModule } from './base/base.module';
 import { AutenticacaoModule } from './autenticacao/autenticacao.module';
 import { UsuarioModule } from './base/alfa/usuario/usuario.module';
+import { EmpresaModule } from './base/alfa/empresa/empresa.module';
+import { ServidorModule } from './base/sistema/servidor/servidor.module';
 
 @Module({
   imports: [
@@ -14,7 +16,9 @@ import { UsuarioModule } from './base/alfa/usuario/usuario.module';
     CacheModule.register({ isGlobal: true }),
     BaseModule,
     AutenticacaoModule,
+    EmpresaModule,
     UsuarioModule,
+    ServidorModule,
   ],
   providers: [AppService],
   controllers: [AppController],

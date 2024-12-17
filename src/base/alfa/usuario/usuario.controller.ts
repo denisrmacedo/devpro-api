@@ -1,10 +1,10 @@
-import { Controller, Param, Query, Body, Get, Post, Delete } from '@nestjs/common';
+import { Controller, Param, Query, Body, Get, Post, Delete, Patch } from '@nestjs/common';
 
 import { Auth } from 'src/autenticacao/auth.decorator';
 import { Identificacao } from 'src/autenticacao/identificacao';
 import { Pagina } from 'src/turbo/assistente.service';
-import { UsuarioService } from './usuario.service';
 import { Usuario } from './modelo/usuario.entity';
+import { UsuarioService } from './usuario.service';
 
 @Controller('base/alfa/usuario')
 export class UsuarioController {
@@ -24,9 +24,9 @@ export class UsuarioController {
     return this.usuarioService.lista(identificacao, criterios);
   }
 
-  @Get('/procura')
-  procura(@Auth() identificacao: Identificacao, @Query() criterios: any): Promise<Usuario[]> {
-    return this.usuarioService.procura(identificacao, criterios);
+  @Get('/busca')
+  busca(@Auth() identificacao: Identificacao, @Query() criterios: any): Promise<Usuario[]> {
+    return this.usuarioService.busca(identificacao, criterios);
   }
 
   @Get(':id')
@@ -37,6 +37,11 @@ export class UsuarioController {
   @Post()
   salva(@Auth() identificacao: Identificacao, @Body() usuario: Usuario): Promise<Usuario> {
     return this.usuarioService.salva(identificacao, usuario);
+  }
+
+  @Patch(':id/editasenha')
+  editaSenha(@Auth() identificacao: Identificacao, @Param('id') id: string, @Body() atributos: any): Promise<Usuario> {
+    return this.usuarioService.editaSenha(identificacao, id, atributos);
   }
 
   @Delete(':id')

@@ -19,9 +19,9 @@ export class AuditoriaController {
     return this.auditoriaService.sincroniza(identificacao, criterios);
   }
 
-  @Get('/procura')
-  procura(@Auth() identificacao: Identificacao, @Query() criterios: any): Promise<Auditoria[]> {
-    return this.auditoriaService.procura(identificacao, criterios);
+  @Get('/busca')
+  busca(@Auth() identificacao: Identificacao, @Query() criterios: any): Promise<Auditoria[]> {
+    return this.auditoriaService.busca(identificacao, criterios);
   }
 
   @Get(':id')

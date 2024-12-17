@@ -1,9 +1,10 @@
-import { Entity, Column, OneToMany } from 'typeorm';
-import { ArrayMinSize, IsArray, IsBoolean, IsInt, IsNotEmpty, IsNumber, IsOptional, IsUrl, Length, ValidateNested } from 'class-validator';
+import { Entity, Column, OneToMany, OneToOne, JoinColumn } from 'typeorm';
+import { ArrayMinSize, IsArray, IsBoolean, IsNotEmpty, IsNumber, IsObject, IsOptional, IsUrl, Length, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 import { Base, BaseTabela_ } from 'src/base/base';
 import { UsuarioCredencial } from './usuario-credencial.entity';
+import { Empresa_ } from '../../empresa/modelo/empresa.entity';
 
 @Entity('alfa.usuario')
 export class Usuario extends Base {
@@ -11,11 +12,6 @@ export class Usuario extends Base {
   @Length(2, 20)
   @Column('varchar', { nullable: false })
   codigo: string;
-
-  @IsOptional()
-  @IsInt()
-  @Column('int', { nullable: false })
-  numero: number;
 
   @IsNotEmpty()
   @Length(2, 80)
@@ -43,25 +39,28 @@ export class Usuario extends Base {
   legendas: string[];
 
   @IsNotEmpty()
-  @IsNumber()
-  @Column('smallint', { nullable: false })
-  genero: UsuarioGenero;
-
-  @IsNotEmpty()
   @IsBoolean()
   @Column('boolean', { nullable: false })
-  mestre: boolean;
+  super: boolean;
 
   @IsNotEmpty()
   @IsBoolean()
   @Column('boolean', { nullable: false })
   administrador: boolean;
 
+  @IsOptional()
+  @IsObject()
+  @OneToOne(() => Empresa_, { eager: true })
+  @JoinColumn()
+  empresa: Empresa_;
+
   @IsArray()
   @ArrayMinSize(1)
   @ValidateNested({ each: true })
   @Type(() => UsuarioCredencial)
-  @OneToMany(() => UsuarioCredencial, usuarioCredencial => usuarioCredencial.usuario, { eager: true, cascade: true, orphanedRowAction: 'soft-delete' })
+  @OneToMany(() => UsuarioCredencial, usuarioCredencial => usuarioCredencial.usuario, {
+    eager: true, cascade: true, orphanedRowAction: 'soft-delete'
+  })
   usuarioCredenciais: UsuarioCredencial[];
 }
 
@@ -71,12 +70,6 @@ export enum UsuarioSituacao {
   Suspenso = 6,
   Banido = 8,
   Inativo = 9,
-}
-
-export enum UsuarioGenero {
-  Masculino = 1,
-  Feminino = 2,
-  NaoInformado = 9,
 }
 
 @Entity('alfa.usuario')

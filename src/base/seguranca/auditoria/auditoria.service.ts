@@ -9,8 +9,10 @@ import { Auditoria } from './modelo/auditoria.entity';
 @Injectable()
 export class AuditoriaService {
   constructor(
-    @InjectRepository(Auditoria, 'principal') private readonly principalRepository: Repository<Auditoria>,
-    @InjectRepository(Auditoria, 'replica') private readonly replicaRepository: Repository<Auditoria>,
+    @InjectRepository(Auditoria, 'gravacao')
+    private readonly gravacaoRepository: Repository<Auditoria>,
+    @InjectRepository(Auditoria, 'leitura')
+    private readonly leituraRepository: Repository<Auditoria>,
     private readonly assistente: AssistenteService,
   ) {}
 
@@ -27,10 +29,10 @@ export class AuditoriaService {
     options.where = [];
     if (criterios['usuario.id'])
       options.where.push({ usuario: { id: criterios.usuario.id } });
-    if (criterios['sessao.id'])
-      options.where.push({ sessao: { id: criterios.sessao.id } });
-    const contagem = await this.principalRepository.count(options);
-    return this.replicaRepository.find(options)
+    if (criterios['autorizacao.id'])
+      options.where.push({ autorizacao: { id: criterios.autorizacao.id } });
+    const contagem = await this.gravacaoRepository.count(options);
+    return this.leituraRepository.find(options)
       .then(
         linhas => this.assistente.pagina(criterios, contagem, linhas),
       );
@@ -44,37 +46,37 @@ export class AuditoriaService {
       skip: criterios.salto,
       take: criterios.linhas,
     };
-    const contagem = await this.principalRepository.count(options);
-    return this.replicaRepository.find(options)
+    const contagem = await this.gravacaoRepository.count(options);
+    return this.leituraRepository.find(options)
       .then(
         linhas => this.assistente.pagina(criterios, contagem, linhas),
       );
   }
 
-  async procura(identificacao: Identificacao, criterios: any): Promise<Auditoria[]> {
+  async busca(identificacao: Identificacao, criterios: any): Promise<Auditoria[]> {
     const options: FindManyOptions<Auditoria> = {
       order: { momento: 1 },
     };
     options.where = [];
     if (criterios['usuario.id'])
       options.where.push({ usuario: { id: criterios.usuario.id } });
-    if (criterios['sessao.id'])
-      options.where.push({ sessao: { id: criterios.sessao.id } });
-    return this.replicaRepository.find(options);
+    if (criterios['autorizacao.id'])
+      options.where.push({ autorizacao: { id: criterios.autorizacao.id } });
+    return this.leituraRepository.find(options);
   }
 
   async capta(identificacao: Identificacao, id: string): Promise<Auditoria> {
     const auditoria = await this.assistente.cache.get<Auditoria>(id);
     if (auditoria)
       return auditoria;
-    return this.principalRepository.findOneByOrFail({ id })
+    return this.gravacaoRepository.findOneByOrFail({ id })
       .then(auditoria => {
         this.assistente.cache.set(auditoria.id, auditoria);
         return auditoria;
       });
   }
   async salva(identificacao: Identificacao, auditoria: DeepPartial<Auditoria>): Promise<Auditoria> {
-    return this.principalRepository
+    return this.gravacaoRepository
       .save(auditoria)
       .then(auditoria => {
         this.assistente.cache.set(auditoria.id, auditoria);
@@ -84,7 +86,7 @@ export class AuditoriaService {
 
   async remove(identificacao: Identificacao, id: string): Promise<Auditoria> {
     const auditoria = await this.capta(identificacao, id);
-    return await this.principalRepository
+    return await this.gravacaoRepository
       .softRemove(auditoria)
       .then(auditoria => {
         this.assistente.cache.del(auditoria.id);

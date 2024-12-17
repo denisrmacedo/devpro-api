@@ -1,8 +1,8 @@
 export type Credencial = {
-  email: string;
+  chave: string;
   senha: string;
   ip: string;
   aplicativo: number;
   navegador: string;
-  fuso: string;
+  horario: string;
 }
