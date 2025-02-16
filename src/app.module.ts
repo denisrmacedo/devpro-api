@@ -8,6 +8,7 @@ import { BaseModule } from './base/base.module';
 import { AutenticacaoModule } from './autenticacao/autenticacao.module';
 import { UsuarioModule } from './base/alfa/usuario/usuario.module';
 import { EmpresaModule } from './base/alfa/empresa/empresa.module';
+import { PerfilModule } from './base/seguranca/perfil/perfil.module';
 import { ServidorModule } from './base/sistema/servidor/servidor.module';
 
 @Module({
@@ -18,9 +19,10 @@ import { ServidorModule } from './base/sistema/servidor/servidor.module';
     AutenticacaoModule,
     EmpresaModule,
     UsuarioModule,
+    PerfilModule,
     ServidorModule,
   ],
   providers: [AppService],
   controllers: [AppController],
 })
-export class AppModule {}
+export class AppModule { }

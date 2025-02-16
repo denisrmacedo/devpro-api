@@ -13,7 +13,7 @@ export class Base {
   @DeleteDateColumn()
   remocao: Date;
 
-  @VersionColumn()
+  @VersionColumn({ select: false })
   versao: number;
 
   get novo(): boolean {
@@ -41,15 +41,17 @@ export class BaseMovimento_ {
 }
 
 export enum Modelo {
-  Usuario = +'010100',
-  Empresa = +'010200',
-  Servidor = +'710100',
+  Usuario = +'030100',
+  Empresa = +'030200',
+  Perfil = +'020100',
+  Servidor = +'010100',
 }
 
 /*
   Esquema
-    Alfa = 01
-    Sistema = 71
+    Alfa = 03
+    Seguranca = 02
+    Sistema = 01
 */
 
 export enum Procedimento {
