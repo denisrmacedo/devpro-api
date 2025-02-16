@@ -19,6 +19,10 @@ export class Pagina<T> {
   linhas: T[];
 }
 
+class BaseEmpresa {
+  empresa: { id: string };
+}
+
 @Injectable()
 export class AssistenteService {
   private readonly _principal = (process.env.principal === '1');
@@ -169,6 +173,19 @@ export class AssistenteService {
     await this.audita<T>(identificacao, repository, instancia, modelo, Procedimento.Remocao, descricao);
   }
 
+  autoriza(identificacao: Identificacao, referencia: BaseEmpresa | BaseEmpresa[] ): void {
+    if (!(referencia instanceof Array)) {
+      if (!referencia.empresa) {
+        referencia.empresa = identificacao.empresa;
+      } else if (identificacao.empresa.id !== referencia.empresa.id) {
+        this.incoerencia('as informações da empresa divergem da identificação');
+      }
+      return;
+    }
+    for (const item of referencia) {
+      this.autoriza(identificacao, item);
+    }
+  }
 
   conflito(mensagem: string): void {
     throw new ConflictException(mensagem);
