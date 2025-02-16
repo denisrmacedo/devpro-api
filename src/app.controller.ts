@@ -9,4 +9,9 @@ export class AppController {
   saudacao(): string {
     return this.appService.saudacao();
   }
+
+  @Get('/propriedades')
+  propriedades(): string {
+    return this.appService.propriedades();
+  }
 }
