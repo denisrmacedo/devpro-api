@@ -3,6 +3,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 
 import { AutenticacaoGuard } from './autenticacao.guard';
+import { TurboModule } from 'src/turbo/turbo.module';
 import { AutenticacaoService } from './autenticacao.service';
 import { AutenticacaoController } from './autenticacao.controller';
 import { UsuarioModule } from 'src/base/alfa/usuario/usuario.module';
@@ -20,6 +21,7 @@ import { AutorizacaoModule } from 'src/base/seguranca/autorizacao/autorizacao.mo
         };
       },
     }),
+    TurboModule,
     UsuarioModule,
     EmpresaModule,
     AutorizacaoModule,

@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 
 import { AutorizacaoCompleta, Identificacao } from './identificacao';
 import { Credencial } from './credencial';
+import { AssistenteService } from 'src/turbo/assistente.service';
 import { UsuarioService } from 'src/base/alfa/usuario/usuario.service';
 import { EmpresaService } from 'src/base/alfa/empresa/empresa.service';
 import { AutorizacaoService } from 'src/base/seguranca/autorizacao/autorizacao.service';
@@ -13,6 +14,7 @@ import { Empresa } from 'src/base/alfa/empresa/modelo/empresa.entity';
 export class AutenticacaoService {
   constructor(
     private readonly jwtService: JwtService,
+    private readonly assistenteService: AssistenteService,
     private readonly usuarioService: UsuarioService,
     private readonly empresaService: EmpresaService,
     private readonly autorizacaoService: AutorizacaoService,
@@ -122,5 +124,37 @@ export class AutenticacaoService {
       token,
     }
     return autorizacaoCompleta;
+  }
+
+  async permissoes(identificacao: Identificacao, id: string) {
+    id ??= identificacao.usuario.id;
+    const usuario = await this.usuarioService.capta(identificacao, id);
+    const consulta: string[] = [];
+    consulta.push(`SELECT`);
+    consulta.push(`  rota,`);
+    consulta.push(`  MIN(acessar) acessar,`);
+    consulta.push(`  MIN(adicionar) adicionar,`);
+    consulta.push(`  MIN(editar) editar,`);
+    consulta.push(`  MIN(remover) remover,`);
+    consulta.push(`  MIN(compartilhar) compartilhar,`);
+    consulta.push(`  MIN(aprovar) aprovar,`);
+    consulta.push(`  MIN(reverter) reverter`);
+    consulta.push(`FROM`);
+    consulta.push(`  seguranca."perfilRota"`);
+    consulta.push(`WHERE`);
+    consulta.push(`  ("perfilId" IN (SELECT UNNEST("perfilIds") FROM alfa."usuarioEmpresa" WHERE "usuarioId" = '${id}') AND (remocao IS NULL))`);
+    consulta.push(`  AND (remocao IS NULL)`);
+    consulta.push(`GROUP BY`);
+    consulta.push(`  rota`);
+    consulta.push(`ORDER BY`);
+    consulta.push(`  rota; `);
+    const rotas = await this.assistenteService.leitura.query(consulta.join('\n'));
+    return {
+      id: usuario.id,
+      nome: usuario.nome,
+      administrador: usuario.administrador,
+      super: usuario.super,
+      rotas,
+    };
   }
 }

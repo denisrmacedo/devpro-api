@@ -1,9 +1,10 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Ip, Post, Request } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Ip, Param, Post, Request } from '@nestjs/common';
 
 import { Public } from './public.decorator';
-import { Identificacao } from './identificacao';
-import { AutenticacaoService } from './autenticacao.service';
 import { Credencial } from './credencial';
+import { Identificacao } from './identificacao';
+import { Auth } from './auth.decorator';
+import { AutenticacaoService } from './autenticacao.service';
 
 @Controller('autenticacao')
 export class AutenticacaoController {
@@ -29,5 +30,10 @@ export class AutenticacaoController {
       ...request.autorizacao,
       token: request.token,
     };
+  }
+
+  @Get('permissoes/:id')
+  permissoes(@Auth() identificacao: Identificacao, @Param('id') id: string): Promise<any> {
+    return this.autenticacaoService.permissoes(identificacao, id);
   }
 }
