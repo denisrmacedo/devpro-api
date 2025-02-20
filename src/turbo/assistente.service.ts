@@ -6,7 +6,8 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 
@@ -28,10 +29,25 @@ export class AssistenteService {
   private readonly _principal = (process.env.principal === '1');
   private readonly _guidZero = '00000000-0000-0000-0000-000000000000';
 
+  public readonly dataMinima = new Date('2021-01-01');
+  public readonly dataMaxima = new Date('9999-12-31');
+
   constructor(
     @Inject(CACHE_MANAGER)
     private readonly cacheService: Cache,
+    @InjectDataSource('gravacao')
+    private readonly gravacaoDataSource: DataSource,
+    @InjectDataSource('leitura')
+    private readonly leituraDataSource: DataSource,
   ) { }
+
+  get gravacao(): DataSource {
+    return this.gravacaoDataSource;
+  }
+
+  get leitura(): DataSource {
+    return this.leituraDataSource;
+  }
 
   get principal(): boolean {
     return this._principal;
