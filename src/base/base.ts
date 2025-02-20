@@ -59,3 +59,11 @@ export enum Procedimento {
   Edicao = 2,
   Remocao = 3,
 }
+
+export enum BaseSituacao {
+  Rascunho = 0,
+  Ativa = 1,
+  Suspensa = 6,
+  Banida = 8,
+  Inativa = 9,
+}

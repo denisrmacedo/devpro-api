@@ -3,8 +3,9 @@ import { ArrayMinSize, IsArray, IsBoolean, IsNotEmpty, IsNumber, IsObject, IsOpt
 import { Type } from 'class-transformer';
 
 import { Base, BaseTabela_ } from 'src/base/base';
-import { UsuarioCredencial } from './usuario-credencial.entity';
 import { Empresa_ } from '../../empresa/modelo/empresa.entity';
+import { UsuarioCredencial } from './usuario-credencial.entity';
+import { UsuarioEmpresa } from './usuario-empresa.entity';
 
 @Entity('alfa.usuario')
 export class Usuario extends Base {
@@ -62,6 +63,15 @@ export class Usuario extends Base {
     eager: true, cascade: true, orphanedRowAction: 'soft-delete'
   })
   usuarioCredenciais: UsuarioCredencial[];
+
+  @IsArray()
+  @ArrayMinSize(0)
+  @ValidateNested({ each: true })
+  @Type(() => UsuarioEmpresa)
+  @OneToMany(() => UsuarioEmpresa, usuarioEmpresa => usuarioEmpresa.usuario, {
+    eager: true, cascade: true, orphanedRowAction: 'soft-delete'
+  })
+  usuarioEmpresas: UsuarioEmpresa[];
 }
 
 export enum UsuarioSituacao {

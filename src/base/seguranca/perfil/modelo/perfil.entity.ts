@@ -29,7 +29,7 @@ export class Perfil extends Base {
   descricao: string;
 
   @IsOptional()
-  @IsUrl()
+  @IsUrl() @Length(2, 800)
   @Column('varchar', { nullable: true, length: 800 })
   imagem: string;
 
