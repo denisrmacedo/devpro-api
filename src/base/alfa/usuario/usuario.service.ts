@@ -70,11 +70,48 @@ export class UsuarioService {
 
   async lista(identificacao: Identificacao, criterios: any): Promise<Usuario[]> {
     const options: FindManyOptions<Usuario> = {
-      select: { id: true, nome: true, imagem: true, situacao: true },
+      select: { id: true, codigo: true,nome: true, imagem: true, legendas: true, situacao: true, super: true, administrador: true },
+      relations: { usuarioCredenciais: true, usuarioEmpresas: true },
       order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,
     };
-    return this.leituraRepository.find(options);
+    const usuarios = await this.leituraRepository.find(options);
+    for (const usuario of usuarios) {
+      const usuarioCredencial = usuario.usuarioCredenciais.find(usuarioCredencial => usuarioCredencial.chave.includes('@'));
+      if (usuarioCredencial) {
+        usuario['email'] = usuarioCredencial.chave;
+      }
+      delete usuario.usuarioCredenciais;
+      var perfis: string[] = [];
+      for (const usuarioEmpresa of usuario.usuarioEmpresas) {
+        if (!usuarioEmpresa.perfilIds?.length) {
+          continue;
+        }
+        const consulta: string[] = [];
+        consulta.push(`SELECT DISTINCT nome`);
+        consulta.push(`FROM seguranca.perfil`);
+        consulta.push(`WHERE`);
+        consulta.push(`  (id IN (${usuarioEmpresa.perfilIds.map(perfilId => `'${perfilId.trim()}'`).join(', ')}))`);
+        consulta.push(`  AND (remocao IS NULL)`);
+        const usuarioPerfis: { nome: string }[] = await this.leituraRepository.query(consulta.join(' '));
+        usuarioPerfis.map(usuarioPerfil => {
+          if (!perfis.includes(usuarioPerfil.nome)) {
+            perfis.push(usuarioPerfil.nome);
+          }
+        });
+      }
+      perfis = perfis.sort();
+      if (usuario.super) {
+        perfis = ['Super administradores'];
+      } else if (usuario.administrador) {
+        if (!perfis.includes('Administradores')) {
+          perfis = ['Administradores', ...perfis];
+        }
+      }
+      usuario['perfis'] = perfis.join(', ');
+      delete usuario.usuarioEmpresas;
+    }
+    return usuarios;
   }
 
   async busca(identificacao: Identificacao, criterios: any): Promise<Usuario[]> {

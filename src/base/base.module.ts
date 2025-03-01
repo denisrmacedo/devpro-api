@@ -1,6 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { types } from 'pg';
 import 'dotenv/config';
+
+types.setTypeParser(types.builtins.INT8, (value: string) => parseInt(value));
+types.setTypeParser(types.builtins.FLOAT4, (value: string) => parseFloat(value));
+types.setTypeParser(types.builtins.FLOAT8, (value: string) => parseFloat(value));
+types.setTypeParser(types.builtins.NUMERIC, (value: string) => parseFloat(value));
 
 @Module({
   imports: [
@@ -32,4 +38,4 @@ import 'dotenv/config';
     }),
   ],
 })
-export class BaseModule {}
+export class BaseModule { }

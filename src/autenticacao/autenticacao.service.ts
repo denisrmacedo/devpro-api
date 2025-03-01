@@ -59,7 +59,7 @@ export class AutenticacaoService {
       throw new UnauthorizedException('usuário inválido');
     }
     if (!await bcrypt.compare(credencial.senha, usuarioCredencial.senha)) {
-      throw new UnauthorizedException('usuário inválido');
+      throw new UnauthorizedException('credenciais inválidas');
     }
     if (!empresa) {
       if (usuario.empresa) {

@@ -10,6 +10,7 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { DateTime } from 'luxon';
 
 import { Identificacao } from 'src/autenticacao/identificacao';
 import { Base, Modelo, Procedimento } from 'src/base/base';
@@ -89,7 +90,59 @@ export class AssistenteService {
     if (+criterios.atuante === 1) {
       criterios.situacao = 1;
     }
+    if (criterios.intervalo) {
+      this.intervalo(criterios);
+    }
   }
+
+  intervalo(criterios: any) {
+    if (!criterios.intervalo) {
+      return;
+    }
+    const agora = DateTime.now();
+    var inicio: DateTime;
+    var conclusao: DateTime;
+    switch (criterios.intervalo) {
+      case 'ontem':
+        inicio = agora.minus({ days: 1 });
+        conclusao = agora.minus({ days: 1 });
+        break;
+      case 'hoje':
+        inicio = agora;
+        conclusao = agora;
+        break;
+      case '-semana':
+        inicio = agora.minus({ days: 15 });
+        conclusao = agora.minus({ days: 8 });
+        break;
+      case 'semana':
+        inicio = agora.minus({ days: 7 });
+        conclusao = agora;
+        break;
+      case '-mes':
+        inicio = agora.startOf('month').minus({ months: 1 });
+        conclusao = agora.minus({ months: 1 });
+        break;
+      case 'mes':
+        inicio = agora.startOf('month');
+        conclusao = agora;
+        break;
+      case '-ano':
+        inicio = agora.startOf('year').minus({ months: 12 });
+        conclusao = agora.minus({ months: 12 });
+        break;
+      case 'ano':
+        inicio = agora.startOf('year');
+        conclusao = agora;
+        break;
+      default:
+        inicio = DateTime.fromISO('2025-01-01').setZone('America/Sao_Paulo');
+        conclusao = DateTime.fromISO('9999-12-31').setZone('America/Sao_Paulo');
+    }
+    criterios.inicio = inicio.toISODate();
+    criterios.conclusao = conclusao.toISODate();
+  }
+
   pagina<T>(criterios: any, contagem: number, linhas: T[]): Pagina<T> {
     return {
       numero: +criterios.pagina,
@@ -127,7 +180,7 @@ export class AssistenteService {
       consulta.push(`SELECT count(*) "quantidade"`);
       consulta.push(`FROM "${esquema}"."${tabela}"`);
       consulta.push(`WHERE`);
-      if (typeof(valor) === 'string') {
+      if (typeof (valor) === 'string') {
         consulta.push(`  (versal("${chave}") = versal('${valor}'))`);
       } else {
         consulta.push(`  ("${chave}" = ${valor})`);
@@ -156,7 +209,7 @@ export class AssistenteService {
         continue;
       }
       var valor = criterios[chave];
-      if (typeof(valor) === 'string') {
+      if (typeof (valor) === 'string') {
         valor = `'${valor}'`;
       }
       consulta.push(`  ${conectivo}("${chave}" = ${valor})`);
@@ -171,10 +224,10 @@ export class AssistenteService {
     if (!referencia) {
       procedimento = Procedimento.Adicao;
     }
-    if (typeof(referencia) === 'boolean') {
+    if (typeof (referencia) === 'boolean') {
       procedimento = referencia ? Procedimento.Adicao : Procedimento.Edicao;
     }
-    if (typeof(referencia) === 'number') {
+    if (typeof (referencia) === 'number') {
       procedimento = referencia;
     }
     const consulta: string[] = [];
@@ -189,7 +242,7 @@ export class AssistenteService {
     await this.audita<T>(identificacao, repository, instancia, modelo, Procedimento.Remocao, descricao);
   }
 
-  autoriza(identificacao: Identificacao, referencia: BaseEmpresa | BaseEmpresa[] ): void {
+  autoriza(identificacao: Identificacao, referencia: BaseEmpresa | BaseEmpresa[]): void {
     if (!(referencia instanceof Array)) {
       if (!referencia.empresa) {
         referencia.empresa = identificacao.empresa;

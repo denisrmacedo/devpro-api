@@ -19,8 +19,8 @@ export class UsuarioEmpresa extends Base {
   @JoinColumn()
   empresa: Empresa_;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsArray()
   @Column('uuid', { array: true })
-  perfilIds: string;
+  perfilIds: string[];
 }

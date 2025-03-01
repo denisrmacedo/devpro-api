@@ -10,6 +10,7 @@ import { UsuarioModule } from './base/alfa/usuario/usuario.module';
 import { EmpresaModule } from './base/alfa/empresa/empresa.module';
 import { PerfilModule } from './base/seguranca/perfil/perfil.module';
 import { ServidorModule } from './base/sistema/servidor/servidor.module';
+import { DashboardModule } from './avaliacao/analise/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ServidorModule } from './base/sistema/servidor/servidor.module';
     CacheModule.register({ isGlobal: true }),
     BaseModule,
     AutenticacaoModule,
+    DashboardModule,
     EmpresaModule,
     UsuarioModule,
     PerfilModule,
