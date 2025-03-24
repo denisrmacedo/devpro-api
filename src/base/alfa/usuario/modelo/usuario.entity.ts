@@ -9,7 +9,7 @@ import { UsuarioEmpresa } from './usuario-empresa.entity';
 
 @Entity('alfa.usuario')
 export class Usuario extends Base {
-  @IsNotEmpty()
+  @IsOptional()
   @Length(2, 20)
   @Column('varchar', { nullable: false })
   codigo: string;
@@ -21,7 +21,7 @@ export class Usuario extends Base {
 
   @IsOptional()
   @IsUrl()
-  @Column('varchar', { nullable: true, length: 800 })
+  @Column('varchar', { nullable: true })
   imagem: string;
 
   @IsNotEmpty()
@@ -50,6 +50,26 @@ export class Usuario extends Base {
   administrador: boolean;
 
   @IsOptional()
+  @Length(1, 80)
+  @Column('varchar', { nullable: true })
+  celular: string;
+
+  @IsOptional()
+  @Length(1, 80)
+  @Column('varchar', { nullable: true })
+  email: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Column('smallint', { nullable: false })
+  tema: UsuarioTema;
+
+  @IsOptional()
+  @Length(1, 800)
+  @Column('varchar', { nullable: true })
+  observacoes: string;
+
+  @IsOptional()
   @IsObject()
   @OneToOne(() => Empresa_, { eager: true })
   @JoinColumn()
@@ -65,6 +85,7 @@ export class Usuario extends Base {
   usuarioCredenciais: UsuarioCredencial[];
 
   @IsArray()
+  @IsOptional()
   @ArrayMinSize(0)
   @ValidateNested({ each: true })
   @Type(() => UsuarioEmpresa)
@@ -80,6 +101,12 @@ export enum UsuarioSituacao {
   Suspenso = 6,
   Banido = 8,
   Inativo = 9,
+}
+
+export enum UsuarioTema {
+  Escuro = 0,
+  Claro = 1,
+  Sistema = 2,
 }
 
 @Entity('alfa.usuario')

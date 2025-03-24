@@ -17,4 +17,14 @@ export class UsuarioCredencial extends Base {
   @Length(2, 120)
   @Column()
   senha: string;
+
+  @IsOptional()
+  @Length(5, 80)
+  @Column()
+  pergunta: string;
+
+  @IsOptional()
+  @Length(1, 80)
+  @Column()
+  resposta: string;
 }
