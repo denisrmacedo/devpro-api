@@ -201,6 +201,9 @@ export class UsuarioService {
         usuarioCredencial.senha = await bcrypt.hash(usuarioCredencial.senha, 10);
       }
     }
+    if (!usuario.codigo) {
+      await this.assistente.sequencia(this.gravacaoRepository, usuario, '', 4);
+    }
     const novo = usuario.novo;
     return this.gravacaoRepository
       .save(usuario)
