@@ -194,6 +194,8 @@ export class UsuarioService {
     for (const usuarioCredencial of usuario.usuarioCredenciais) {
       await this.assistente.unico(this.gravacaoRepository, { usuarioCredencial }, {
         chave: 'chave',
+      }, {
+        usuarioId: usuario.id,
       });
       if (!usuarioCredencial.senha.startsWith('$')) {
         usuarioCredencial.senha = await bcrypt.hash(usuarioCredencial.senha, 10);

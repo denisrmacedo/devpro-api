@@ -71,7 +71,7 @@ export class AssistenteService {
       criterios.momento = new Date(criterios.momento || '2021-01-01');
     }
     const busca = criterios.busca;
-    if (typeof (busca) === 'string') {
+    if ((typeof (busca) === 'string') && (busca !== 'null')) {
       if (busca.startsWith('#')) {
         criterios.legenda = '%' + busca.substring(1).toLowerCase() + '%';
       } else if (!busca.includes('.') && +busca) {
@@ -79,7 +79,7 @@ export class AssistenteService {
         criterios.numero = +busca;
       } else if (busca.includes('@')) {
         criterios.email = busca;
-      } else {
+      } else if (busca) {
         criterios.nome = busca.toLowerCase().replaceAll('*', '%') + '%';
       }
     }
@@ -151,13 +151,13 @@ export class AssistenteService {
     };
   }
 
-  async unico<T>(repository: Repository<T>, referencia: Record<string, object>, propriedades: Record<string, string>): Promise<void> {
+  async unico<T>(repository: Repository<T>, referencia: Record<string, object>, propriedades: Record<string, string>, identificador: Record<string, string> = {}): Promise<void> {
     if ((Object.keys(referencia).length) !== 1) {
       this.parametroInvalido('referencia');
     }
     var esquema = '';
     var tabela = '';
-    var instancia: object;
+    var instancia: object = null;
     const segmentos = repository.metadata.tableName.split('.');
     if (segmentos.length === 2) {
       esquema = segmentos[0];
@@ -165,6 +165,9 @@ export class AssistenteService {
     for (const chave in referencia) {
       tabela = chave;
       instancia = referencia[chave];
+    }
+    if (!Object.keys(identificador).length) {
+      identificador = { id: instancia['id'] };
     }
     for (const chave in propriedades) {
       if (!propriedades.hasOwnProperty(chave)) {
@@ -174,8 +177,10 @@ export class AssistenteService {
       if ((chave === 'numero') && (+referencia < 0)) {
         continue;
       }
+      if ((chave === 'codigo') && (instancia[chave] === undefined)) {
+        return;
+      }
       var valor = instancia[chave];
-      const id = instancia['id'] ?? this._guidZero;
       const consulta: string[] = [];
       consulta.push(`SELECT count(*) "quantidade"`);
       consulta.push(`FROM "${esquema}"."${tabela}"`);
@@ -185,7 +190,9 @@ export class AssistenteService {
       } else {
         consulta.push(`  ("${chave}" = ${valor})`);
       }
-      consulta.push(`  AND ("id" <> '${id}')`);
+      for (const chave in identificador) {
+        consulta.push(`  AND ("${chave}" <> '${identificador[chave] || this._guidZero}')`);
+      }
       consulta.push(`  AND ("remocao" IS NULL);`);
       const [{ quantidade }] = await repository.query(consulta.join('\n'));
       if (+quantidade) {
@@ -262,6 +269,14 @@ export class AssistenteService {
     for (const item of referencia) {
       this.autoriza(identificacao, item);
     }
+  }
+
+  sid(prefixo: string) {
+    return (
+      prefixo
+      + Date.now().toString(36)
+      + Math.random().toString(36).substring(2, 6)
+    ).substring(0, 20);
   }
 
   conflito(mensagem: string): void {
