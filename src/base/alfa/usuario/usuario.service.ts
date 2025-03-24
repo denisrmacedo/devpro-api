@@ -241,6 +241,7 @@ export class UsuarioService {
 
   async remove(identificacao: Identificacao, id: string): Promise<Usuario> {
     const usuario = await this.capta(identificacao, id);
+    this.gravacaoRepository.update({ id }, { codigo: this.assistente.sid('¡') });
     return await this.gravacaoRepository
       .softRemove(usuario)
       .then(async usuario => {
