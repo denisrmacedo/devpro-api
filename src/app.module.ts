@@ -11,6 +11,7 @@ import { EmpresaModule } from './base/alfa/empresa/empresa.module';
 import { PerfilModule } from './base/seguranca/perfil/perfil.module';
 import { ServidorModule } from './base/sistema/servidor/servidor.module';
 import { DashboardModule } from './avaliacao/analise/dashboard/dashboard.module';
+import { ArquivoModule } from './integracao/arquivo/arquivo.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { DashboardModule } from './avaliacao/analise/dashboard/dashboard.module'
     UsuarioModule,
     PerfilModule,
     ServidorModule,
+    ArquivoModule,
   ],
   providers: [AppService],
   controllers: [AppController],
