@@ -218,7 +218,7 @@ export class AssistenteService {
     return consulta.join(' ');
   }
 
-  async audita<T extends Base>(identificacao: Identificacao, repository: Repository<T>, instancia: T, modelo: Modelo, referencia: number | boolean, descricao: string): Promise<void> {
+  async audita<T extends Base>(identificacao: Identificacao, instancia: T, modelo: Modelo, referencia: number | boolean, descricao: string): Promise<void> {
     referencia ??= null;
     var procedimento = Procedimento.Adicao;
     if (!referencia) {
@@ -235,11 +235,19 @@ export class AssistenteService {
     consulta.push(`  (id, adicao, edicao, versao, "usuarioId", "autorizacaoId", horario, momento, procedimento, instancia, "instanciaId", "instanciaModelo", "instanciaDescricao")`);
     consulta.push(`VALUES`);
     consulta.push(`  (default, default, default, 1, '${identificacao.usuario.id}', '${identificacao.id}', '${identificacao.horario || 'UTC+0'}', now(), ${procedimento}, '${JSON.stringify(instancia)}', '${instancia.id}', '${modelo}', '${descricao}');`);
-    await repository.query(consulta.join('\n'));
+    await this.gravacao.query(consulta.join('\n'));
   }
 
-  async auditaExclusao<T extends Base>(identificacao: Identificacao, repository: Repository<T>, instancia: T, modelo: Modelo, descricao: string): Promise<void> {
-    await this.audita<T>(identificacao, repository, instancia, modelo, Procedimento.Remocao, descricao);
+  async sequencia<T extends Base>(repository: Repository<T>, instancia: T, prefixo: string, digitos: number): Promise<void> {
+    if (instancia.id) {
+      return;
+    }
+    const [{ sequencia }] = await this.gravacao.query(`SELECT sistema.sequencia_nova('${repository.metadata.tableName}', '${prefixo}', ${digitos}, 1) AS sequencia;`);
+    instancia['codigo'] = sequencia;
+  }
+
+  async auditaExclusao<T extends Base>(identificacao: Identificacao, instancia: T, modelo: Modelo, descricao: string): Promise<void> {
+    await this.audita<T>(identificacao, instancia, modelo, Procedimento.Remocao, descricao);
   }
 
   autoriza(identificacao: Identificacao, referencia: BaseEmpresa | BaseEmpresa[]): void {
