@@ -23,6 +23,7 @@ export class UsuarioService {
   async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<Usuario>> {
     this.assistente.adapta(criterios);
     const options: FindManyOptions<Usuario> = {
+      relations: { usuarioCredenciais: true, usuarioEmpresas: true },
       order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,
       skip: criterios.salto,
@@ -47,36 +48,11 @@ export class UsuarioService {
       });
     }
     const contagem = await this.leituraRepository.count(options);
-    return this.leituraRepository.find(options)
+    const pagina = await this.leituraRepository.find(options)
       .then(
         linhas => this.assistente.pagina(criterios, contagem, linhas),
       );
-  }
-
-  async sincroniza(identificacao: Identificacao, criterios: any): Promise<Pagina<Usuario>> {
-    this.assistente.adapta(criterios, { sincronizacao: true });
-    const options: FindManyOptions<Usuario> = {
-      where: { edicao: MoreThan(criterios.momento) },
-      order: { edicao: 1 },
-      skip: criterios.salto,
-      take: criterios.linhas,
-    };
-    const contagem = await this.gravacaoRepository.count(options);
-    return this.leituraRepository.find(options)
-      .then(
-        linhas => this.assistente.pagina(criterios, contagem, linhas),
-      );
-  }
-
-  async lista(identificacao: Identificacao, criterios: any): Promise<Usuario[]> {
-    const options: FindManyOptions<Usuario> = {
-      select: { id: true, codigo: true,nome: true, imagem: true, legendas: true, situacao: true, super: true, administrador: true },
-      relations: { usuarioCredenciais: true, usuarioEmpresas: true },
-      order: { situacao: 1, nome: 1 },
-      loadEagerRelations: false,
-    };
-    const usuarios = await this.leituraRepository.find(options);
-    for (const usuario of usuarios) {
+    for (const usuario of pagina.linhas) {
       const usuarioCredencial = usuario.usuarioCredenciais.find(usuarioCredencial => usuarioCredencial.chave.includes('@'));
       if (usuarioCredencial) {
         usuario['email'] = usuarioCredencial.chave;
@@ -102,13 +78,84 @@ export class UsuarioService {
       }
       perfis = perfis.sort();
       if (usuario.super) {
-        perfis = ['Super administradores'];
+        perfis = ['Sistema'];
       } else if (usuario.administrador) {
         if (!perfis.includes('Administradores')) {
           perfis = ['Administradores', ...perfis];
         }
       }
-      usuario['perfis'] = perfis.join(', ');
+      if (!perfis.length) {
+        perfis = ['Usuários'];
+      }
+      usuario['perfis'] = perfis;
+      delete usuario.usuarioEmpresas;
+    }
+    return pagina;
+  }
+
+  async sincroniza(identificacao: Identificacao, criterios: any): Promise<Pagina<Usuario>> {
+    this.assistente.adapta(criterios, { sincronizacao: true });
+    const options: FindManyOptions<Usuario> = {
+      where: { edicao: MoreThan(criterios.momento) },
+      order: { edicao: 1 },
+      skip: criterios.salto,
+      take: criterios.linhas,
+    };
+    const contagem = await this.gravacaoRepository.count(options);
+    return this.leituraRepository.find(options)
+      .then(
+        linhas => this.assistente.pagina(criterios, contagem, linhas),
+      );
+  }
+
+  async lista(identificacao: Identificacao, criterios: any): Promise<Usuario[]> {
+    this.assistente.adapta(criterios);
+    const options: FindManyOptions<Usuario> = {
+      select: { id: true, codigo: true,nome: true, imagem: true, legendas: true, situacao: true, super: true, administrador: true },
+      relations: { usuarioCredenciais: true, usuarioEmpresas: true },
+      order: { situacao: 1, nome: 1 },
+      loadEagerRelations: false,
+    };
+    options.where = [];
+    if (criterios.situacao) {
+      options.where.push({ situacao: criterios.situacao });
+    }
+    if (criterios.nome) {
+      options.where.push({ nome: Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome }) });
+    }
+    const usuarios = await this.leituraRepository.find(options);
+    for (const usuario of usuarios) {
+      const usuarioCredencial = usuario.usuarioCredenciais.find(usuarioCredencial => usuarioCredencial.chave.includes('@'));
+      if (usuarioCredencial) {
+        usuario['email'] = usuarioCredencial.chave;
+      }
+      delete usuario.usuarioCredenciais;
+      var perfilIds: string[] = [];
+      for (const usuarioEmpresa of usuario.usuarioEmpresas) {
+        if (usuarioEmpresa.perfilIds?.length) {
+          perfilIds.push(...usuarioEmpresa.perfilIds);
+        }
+      }
+      if (!perfilIds.length) {
+        perfilIds = [this.assistente.guidZero];
+      }
+      const consulta: string[] = [];
+      consulta.push(`SELECT DISTINCT nome`);
+      consulta.push(`FROM seguranca.perfil`);
+      consulta.push(`WHERE`);
+      consulta.push(`  (id IN (${perfilIds.map(perfilId => `'${perfilId.trim()}'`).join(', ')}))`);
+      consulta.push(`  AND (remocao IS NULL);`);
+      const usuarioPerfis: { nome: string }[] = await this.leituraRepository.query(consulta.join(' ')) ?? [];
+      var perfis = usuarioPerfis.map(perfil => perfil.nome);
+      perfis = perfis.sort();
+      if (usuario.super) {
+        perfis = ['Sistema'];
+      } else if (usuario.administrador) {
+        if (!perfis.includes('Administradores')) {
+          perfis = ['Administradores', ...perfis];
+        }
+      }
+      usuario['perfis'] = perfis;
       delete usuario.usuarioEmpresas;
     }
     return usuarios;
