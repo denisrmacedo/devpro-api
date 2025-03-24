@@ -101,7 +101,7 @@ export class ServidorService {
       .save(servidor)
       .then(async servidor => {
         await this.assistente.cache.set(servidor.id, servidor);
-        await this.assistente.audita(identificacao, this.gravacaoRepository, servidor, Modelo.Servidor, novo, 'Servidor: ' + servidor.nome);
+        await this.assistente.audita(identificacao, servidor, Modelo.Servidor, novo, 'Servidor: ' + servidor.nome);
         return servidor;
       });
   }
@@ -112,7 +112,7 @@ export class ServidorService {
       .softRemove(servidor)
       .then(async servidor => {
         await this.assistente.cache.del(servidor.id);
-        await this.assistente.auditaExclusao(identificacao, this.gravacaoRepository, servidor, Modelo.Servidor, 'Servidor: ' + servidor.nome);
+        await this.assistente.auditaExclusao(identificacao, servidor, Modelo.Servidor, 'Servidor: ' + servidor.nome);
         return servidor;
       })
   }

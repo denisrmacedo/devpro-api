@@ -108,7 +108,7 @@ export class PerfilService {
     return this.gravacaoRepository
       .save(perfil)
       .then(async perfil => {
-        await this.assistente.audita(identificacao, this.gravacaoRepository, perfil, Modelo.Perfil, novo, 'Perfil: ' + perfil.nome);
+        await this.assistente.audita(identificacao, perfil, Modelo.Perfil, novo, 'Perfil: ' + perfil.nome);
         return perfil;
       });
   }
@@ -119,7 +119,7 @@ export class PerfilService {
     return this.gravacaoRepository
       .softRemove(perfil)
       .then(async perfil => {
-        await this.assistente.auditaExclusao(identificacao, this.gravacaoRepository, perfil, Modelo.Perfil, 'Perfil: ' + perfil.nome);
+        await this.assistente.auditaExclusao(identificacao, perfil, Modelo.Perfil, 'Perfil: ' + perfil.nome);
         return perfil;
       })
   }

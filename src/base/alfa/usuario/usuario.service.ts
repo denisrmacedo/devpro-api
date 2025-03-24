@@ -157,7 +157,7 @@ export class UsuarioService {
       .save(usuario)
       .then(async usuario => {
         await this.assistente.cache.set(usuario.id, usuario);
-        await this.assistente.audita(identificacao, this.gravacaoRepository, usuario, Modelo.Usuario, novo, 'Usuário: ' + usuario.nome);
+        await this.assistente.audita(identificacao, usuario, Modelo.Usuario, novo, 'Usuário: ' + usuario.nome);
         return usuario;
       });
   }
@@ -198,7 +198,7 @@ export class UsuarioService {
       .softRemove(usuario)
       .then(async usuario => {
         await this.assistente.cache.del(usuario.id);
-        await this.assistente.auditaExclusao(identificacao, this.gravacaoRepository, usuario, Modelo.Usuario, 'Usuário: ' + usuario.nome);
+        await this.assistente.auditaExclusao(identificacao, usuario, Modelo.Usuario, 'Usuário: ' + usuario.nome);
         return usuario;
       })
   }

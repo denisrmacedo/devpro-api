@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, MoreThan, FindManyOptions, Not, Raw } from 'typeorm';
+import { Repository, MoreThan, FindManyOptions, Raw } from 'typeorm';
 
 import { Identificacao } from 'src/autenticacao/identificacao';
 import { AssistenteService, Pagina } from 'src/turbo/assistente.service';
@@ -107,7 +107,7 @@ export class EmpresaService {
       .save(empresa)
       .then(async empresa => {
         await this.assistente.cache.set(empresa.id, empresa);
-        await this.assistente.audita(identificacao, this.gravacaoRepository, empresa, Modelo.Empresa, novo, 'Empresa: ' + empresa.nome);
+        await this.assistente.audita(identificacao, empresa, Modelo.Empresa, novo, 'Empresa: ' + empresa.nome);
         return empresa;
       });
   }
@@ -118,7 +118,7 @@ export class EmpresaService {
       .softRemove(empresa)
       .then(async empresa => {
         await this.assistente.cache.del(empresa.id);
-        await this.assistente.auditaExclusao(identificacao, this.gravacaoRepository, empresa, Modelo.Empresa, 'Empresa: ' + empresa.nome);
+        await this.assistente.auditaExclusao(identificacao, empresa, Modelo.Empresa, 'Empresa: ' + empresa.nome);
         return empresa;
       })
   }
