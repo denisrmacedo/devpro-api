@@ -3,18 +3,24 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import compression from '@fastify/compress';
+import multipart from '@fastify/multipart';
+import { join } from 'path';
 
 import { AppModule } from './app.module';
 import { aplicativo } from './app.properties';
-import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
   );
+  app.enableCors({
+    origin: '*',
+    methods: '*',
+    allowedHeaders: '*',
+  });
   app.register(compression, { encodings: ['gzip', 'deflate'] });
-  app.enableCors();
+  app.register(multipart, { limits: { fileSize: 1000 } });
   app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
     .setTitle('Aurora API')
