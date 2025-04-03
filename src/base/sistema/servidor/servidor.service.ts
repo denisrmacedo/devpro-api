@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, MoreThan, FindManyOptions, Not, Raw } from 'typeorm';
+import { Repository, MoreThan, FindManyOptions, Raw } from 'typeorm';
 
 import { Identificacao } from 'src/autenticacao/identificacao';
 import { AssistenteService, Pagina } from 'src/turbo/assistente.service';
@@ -20,7 +20,7 @@ export class ServidorService {
   async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<Servidor>> {
     this.assistente.adapta(criterios);
     const options: FindManyOptions<Servidor> = {
-      order: { situacao: 1, nome: 1 },
+      order: { situacao: 1, super: -1, nome: 1 },
       loadEagerRelations: false,
       skip: criterios.salto,
       take: criterios.linhas,
@@ -63,7 +63,7 @@ export class ServidorService {
   async lista(identificacao: Identificacao, criterios: any): Promise<Servidor[]> {
     const options: FindManyOptions<Servidor> = {
       select: { id: true, nome: true, imagem: true, situacao: true },
-      order: { situacao: 1, nome: 1 },
+      order: { situacao: 1, super: -1, nome: 1 },
       loadEagerRelations: false,
     };
     return this.leituraRepository.find(options);
@@ -96,6 +96,9 @@ export class ServidorService {
     await this.assistente.unico(this.gravacaoRepository, { servidor }, {
       codigo: 'código', nome: 'nome',
     });
+    if (!servidor.codigo) {
+      await this.assistente.sequencia(this.gravacaoRepository, servidor, '', 3);
+    }
     const novo = servidor.novo;
     return this.gravacaoRepository
       .save(servidor)

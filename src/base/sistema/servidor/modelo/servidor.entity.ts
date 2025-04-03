@@ -5,7 +5,7 @@ import { Base, BaseTabela_ } from 'src/base/base';
 
 @Entity('sistema.servidor')
 export class Servidor extends Base {
-  @IsNotEmpty()
+  @IsOptional()
   @Length(2, 20)
   @Column('varchar', { nullable: false })
   codigo: string;
@@ -33,7 +33,7 @@ export class Servidor extends Base {
   @IsOptional()
   @IsArray()
   @Column('varchar', { nullable: true, array: true })
-  legendas: string[];
+  etiquetas: string[];
 
   @IsNotEmpty()
   @IsBoolean()
