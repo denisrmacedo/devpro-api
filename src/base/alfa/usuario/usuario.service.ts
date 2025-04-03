@@ -112,7 +112,7 @@ export class UsuarioService {
   async lista(identificacao: Identificacao, criterios: any): Promise<Usuario[]> {
     this.assistente.adapta(criterios);
     const options: FindManyOptions<Usuario> = {
-      select: { id: true, codigo: true,nome: true, imagem: true, legendas: true, situacao: true, super: true, administrador: true },
+      select: { id: true, codigo: true, nome: true, imagem: true, situacao: true },
       relations: { usuarioCredenciais: true, usuarioEmpresas: true },
       order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,

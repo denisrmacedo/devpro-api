@@ -37,7 +37,7 @@ export class Usuario extends Base {
   @IsOptional()
   @IsArray()
   @Column('varchar', { nullable: true, array: true })
-  legendas: string[];
+  etiquetas: string[];
 
   @IsNotEmpty()
   @IsBoolean()
