@@ -8,6 +8,7 @@ import { join } from 'path';
 
 import { AppModule } from './app.module';
 import { aplicativo } from './app.properties';
+import { AppExceptionFilter } from './turbo/app-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -21,6 +22,7 @@ async function bootstrap() {
   });
   app.register(compression, { encodings: ['gzip', 'deflate'] });
   app.register(multipart, { limits: { fileSize: 1000 } });
+  app.useGlobalFilters(new AppExceptionFilter());
   app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
     .setTitle('Aurora API')
