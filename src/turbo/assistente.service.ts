@@ -177,23 +177,75 @@ export class AssistenteService {
       if ((chave === 'numero') && (+referencia < 0)) {
         continue;
       }
-      if ((chave === 'codigo') && (instancia[chave] === undefined)) {
+      if ((chave === 'codigo') && !instancia['codigo']) {
         return;
       }
       var valor = instancia[chave];
       const consulta: string[] = [];
-      consulta.push(`SELECT count(*) "quantidade"`);
-      consulta.push(`FROM "${esquema}"."${tabela}"`);
+      consulta.push(`SELECT count(*) quantidade`);
+      consulta.push(`FROM ${esquema}.${tabela}`);
       consulta.push(`WHERE`);
       if (typeof (valor) === 'string') {
-        consulta.push(`  (versal("${chave}") = versal('${valor}'))`);
+        consulta.push(`  (versal(${chave}) = versal('${valor}'))`);
       } else {
-        consulta.push(`  ("${chave}" = ${valor})`);
+        consulta.push(`  (${chave} = ${valor})`);
       }
       for (const chave in identificador) {
-        consulta.push(`  AND ("${chave}" <> '${identificador[chave] || this._guidZero}')`);
+        consulta.push(`  AND (${chave} <> '${identificador[chave] || this._guidZero}')`);
       }
-      consulta.push(`  AND ("remocao" IS NULL);`);
+      consulta.push(`  AND (remocao IS NULL);`);
+      const [{ quantidade }] = await repository.query(consulta.join('\n'));
+      if (+quantidade) {
+        this.conflito(`já existe um registro com o campo ${campo} = ${valor}`);
+      }
+    }
+    return;
+  }
+
+  async unicoEmpresa<T>(repository: Repository<T>, empresa: { id: string }, referencia: Record<string, object>, propriedades: Record<string, string>, identificador: Record<string, string> = {}): Promise<void> {
+    if ((Object.keys(referencia).length) !== 1) {
+      this.parametroInvalido('referencia');
+    }
+    var esquema = '';
+    var tabela = '';
+    var instancia: object = null;
+    const segmentos = repository.metadata.tableName.split('.');
+    if (segmentos.length === 2) {
+      esquema = segmentos[0];
+    }
+    for (const chave in referencia) {
+      tabela = chave;
+      instancia = referencia[chave];
+    }
+    if (!Object.keys(identificador).length) {
+      identificador = { id: instancia['id'] };
+    }
+    for (const chave in propriedades) {
+      if (!propriedades.hasOwnProperty(chave)) {
+        continue;
+      }
+      const campo = propriedades[chave];
+      if ((chave === 'numero') && (+referencia < 0)) {
+        continue;
+      }
+      if ((chave === 'codigo') && !instancia['codigo']) {
+        return;
+      }
+      var valor = instancia[chave];
+      const consulta: string[] = [];
+      consulta.push(`SELECT count(*) quantidade`);
+      consulta.push(`FROM ${esquema}.${tabela}`);
+      consulta.push(`WHERE`);
+      consulta.push(`  (empresa = '${empresa.id}')`);
+      if (typeof (valor) === 'string') {
+        consulta.push(`  AND (versal(${chave}) = versal('${valor}'))`);
+      } else {
+        consulta.push(`  AND (${chave} = ${valor})`);
+      }
+      for (const chave in identificador) {
+        consulta.push(`  AND (${chave} <> '${identificador[chave] || this._guidZero}')`);
+      }
+      consulta.push(`  AND (remocao IS NULL);`);
       const [{ quantidade }] = await repository.query(consulta.join('\n'));
       if (+quantidade) {
         this.conflito(`já existe um registro com o campo ${campo} = ${valor}`);
@@ -250,6 +302,14 @@ export class AssistenteService {
       return;
     }
     const [{ sequencia }] = await this.gravacao.query(`SELECT sistema.sequencia_nova('${repository.metadata.tableName}', '${prefixo}', ${digitos}, 1) AS sequencia;`);
+    instancia['codigo'] = sequencia;
+  }
+
+  async sequenciaEmpresa<T extends Base>(repository: Repository<T>, instancia: T, empresa: { id: string }, prefixo: string, digitos: number): Promise<void> {
+    if (instancia.id) {
+      return;
+    }
+    const [{ sequencia }] = await this.gravacao.query(`SELECT sistema."sequenciaEmpresa_nova"('${repository.metadata.tableName}', '${empresa.id}'::uuid , '${prefixo}', ${digitos}, 1) AS sequencia;`);
     instancia['codigo'] = sequencia;
   }
 
