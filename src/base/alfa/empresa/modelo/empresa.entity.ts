@@ -6,7 +6,7 @@ import { Servidor_ } from 'src/base/sistema/servidor/modelo/servidor.entity';
 
 @Entity('alfa.empresa')
 export class Empresa extends Base {
-  @IsNotEmpty()
+  @IsOptional()
   @Length(2, 20)
   @Column('varchar', { nullable: false })
   codigo: string;
@@ -34,12 +34,22 @@ export class Empresa extends Base {
   @IsOptional()
   @IsArray()
   @Column('varchar', { nullable: true, array: true })
-  legendas: string[];
+  etiquetas: string[];
 
   @IsNotEmpty()
   @IsBoolean()
   @Column('boolean', { nullable: false })
   super: boolean;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Column('smallint', { nullable: false })
+  atividade: EmpresaAtividade;
+
+  @IsOptional()
+  @Length(1, 800)
+  @Column('varchar', { nullable: true })
+  observacoes: string;
 
   @IsNotEmpty()
   @IsObject()
@@ -52,8 +62,27 @@ export enum EmpresaSituacao {
   Rascunho = 0,
   Ativa = 1,
   Suspensa = 6,
-  Banida = 8,
   Inativa = 9,
+}
+
+export enum EmpresaAtividade {
+  Geral = 0,
+  Supermercado = 1,
+  Mercearia = 2,
+  Utilidades = 3,
+  Atacado = 4,
+  Varejo = 5,
+  Industria = 6,
+  Tecnologia = 7,
+  Servicos = 8,
+  Saude = 9,
+  Educacao = 10,
+  Alimentacao = 12,
+  Transporte = 14,
+  Construcao = 15,
+  Agricultura = 17,
+  Entretenimento = 18,
+  Governo = 30,
 }
 
 @Entity('alfa.empresa')
