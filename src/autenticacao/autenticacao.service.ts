@@ -89,7 +89,7 @@ export class AutenticacaoService {
       inicio: new Date(),
       conclusao: new Date(Date.now() + ((24 * 60 * 60 * 1000) - 1000)),
     });
-    await this.usuarioService.editaEmpresa(null, usuario, empresa);
+    await this.usuarioService.vinculaEmpresa(null, usuario, empresa);
     const identificacao: Identificacao = {
       id: autorizacao.id,
       chave: usuarioCredencial.chave,

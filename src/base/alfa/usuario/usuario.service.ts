@@ -9,6 +9,7 @@ import { Modelo } from 'src/base/base';
 import { Usuario, UsuarioSituacao } from './modelo/usuario.entity';
 import { UsuarioCredencial } from './modelo/usuario-credencial.entity';
 import { Empresa } from '../empresa/modelo/empresa.entity';
+import { UsuarioEmpresa } from './modelo/usuario-empresa.entity';
 
 @Injectable()
 export class UsuarioService {
@@ -202,7 +203,7 @@ export class UsuarioService {
       }
     }
     if (!usuario.codigo) {
-      await this.assistente.sequencia(this.gravacaoRepository, usuario, '', 4);
+      await this.assistente.sequencia(this.gravacaoRepository, usuario, '', 7);
     }
     const novo = usuario.novo;
     return this.gravacaoRepository
@@ -240,7 +241,33 @@ export class UsuarioService {
     return usuario;
   }
 
-  async editaEmpresa(identificacao: Identificacao, usuario: Usuario, empresa: Empresa): Promise<Usuario> {
+  async editaEmpresa(identificacao: Identificacao, id: string, parametros: { empresa: Empresa, associa: boolean }): Promise<Usuario> {
+    const usuario = await this.leituraRepository
+      .findOneOrFail({
+        where: { id },
+        relations: { usuarioEmpresas: { empresa: true } },
+        loadEagerRelations: false,
+      });
+    if (!parametros.empresa) {
+      this.assistente.incoerencia('Empresa inválida');
+    }
+    if (parametros.associa) {
+      if (!usuario.usuarioEmpresas.find(usuarioEmpresa => usuarioEmpresa.empresa.id === parametros.empresa.id)) {
+        const usuarioEmpresa = new UsuarioEmpresa();
+        usuarioEmpresa.usuario = usuario;
+        usuarioEmpresa.empresa = parametros.empresa;
+        usuarioEmpresa.situacao = 1;
+        this.assistente.gravacao.getRepository(UsuarioEmpresa)
+          .save(usuarioEmpresa);
+      }
+      return usuario;
+    }
+    this.assistente.gravacao.getRepository(UsuarioEmpresa)
+      .softDelete({ usuario: { id: usuario.id }, empresa: { id: parametros.empresa.id } });
+    return usuario;
+  }
+
+  async vinculaEmpresa(identificacao: Identificacao, usuario: Usuario, empresa: Empresa): Promise<Usuario> {
     return this.gravacaoRepository.update({ id: usuario.id }, { empresa: empresa }).then(() => usuario);
   }
 

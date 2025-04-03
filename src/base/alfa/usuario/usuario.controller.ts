@@ -44,6 +44,11 @@ export class UsuarioController {
     return this.usuarioService.editaSenha(identificacao, id, atributos);
   }
 
+  @Patch(':id/editaempresa')
+  editaEmpresa(@Auth() identificacao: Identificacao, @Param('id') id: string, @Body() atributos: any): Promise<Usuario> {
+    return this.usuarioService.editaEmpresa(identificacao, id, atributos);
+  }
+
   @Delete(':id')
   remove(@Auth() identificacao: Identificacao, @Param('id') id: string): Promise<Usuario> {
     return this.usuarioService.remove(identificacao, id);
