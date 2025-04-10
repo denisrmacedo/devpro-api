@@ -104,6 +104,9 @@ export class PerfilService {
     await this.assistente.unico(this.gravacaoRepository, { perfil }, {
       codigo: 'codigo', nome: 'nome',
     });
+    if (!perfil.codigo) {
+      await this.assistente.sequenciaEmpresa(this.gravacaoRepository, perfil, perfil.empresa, '', 3);
+    }
     const novo = perfil.novo;
     return this.gravacaoRepository
       .save(perfil)

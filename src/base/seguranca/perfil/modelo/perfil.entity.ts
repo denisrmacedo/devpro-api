@@ -8,12 +8,12 @@ import { PerfilRota } from './perfil-rota.entity';
 
 @Entity('seguranca.perfil')
 export class Perfil extends Base {
-  @IsOptional()
+  @IsNotEmpty()
   @OneToOne(() => Empresa_)
   @JoinColumn()
   empresa: Empresa_;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString() @Length(2, 20)
   @Column('varchar', { nullable: false, length: 80 })
   codigo: string;
