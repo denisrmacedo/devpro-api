@@ -12,6 +12,10 @@ export class AppExceptionFilter implements ExceptionFilter {
     var message = exception.message;
     var code = 'HttpException';
 
+    if (exception.response?.message) {
+      message = exception.response?.message;
+    }
+
     Logger.error(message, exception.stack, `${request.method} ${request.url}`);
 
     var status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -19,7 +23,6 @@ export class AppExceptionFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       error = exception.getResponse()['error'];
-      message = exception.message;
       code = exception.name;
     } else {
       switch (exception.constructor) {
@@ -32,7 +35,7 @@ export class AppExceptionFilter implements ExceptionFilter {
           code = exception.code;
           break;
         case EntityNotFoundError:
-          status = HttpStatus.UNPROCESSABLE_ENTITY
+          status = HttpStatus.NOT_FOUND
           message = exception.message;
           code = exception.code;
           break;
