@@ -45,31 +45,91 @@ export class EmpresaService {
       const parametros = ids.map((_, index) => `$${index + 1}`).join(',');
       const consulta: string[] = [];
       consulta.length = 0;
-      consulta.push(`SELECT "empresaId", id, codigo, nome, situacao`);
+      consulta.push(`SELECT`);
+      consulta.push(`  "empresaId",`);
+      consulta.push(`  id,`);
+      consulta.push(`  codigo,`);
+      consulta.push(`  nome,`);
+      consulta.push(`  situacao`);
       consulta.push(`FROM alfa.estabelecimento`);
-      consulta.push(`WHERE ("empresaId" IN (${parametros})) AND (remocao IS NULL)`);
-      consulta.push(`ORDER BY "empresaId", situacao, super DESC, nome;`);
+      consulta.push(`WHERE`);
+      consulta.push(`  ("empresaId" IN (${parametros}))`);
+      consulta.push(`  AND (remocao IS NULL)`);
+      consulta.push(`ORDER BY`);
+      consulta.push(`  "empresaId",`);
+      consulta.push(`  nome;`);
       const estabelecimentos:
-        { empresaId: string, id: string, codigo: string, nome: string, situacao: number}[]
+        { empresaId: string, id: string, codigo: string, nome: string, situacao: number, imagens: string[] }[]
         = await this.assistente.leitura.query(consulta.join('\n'), ids);
       consulta.length = 0;
-      consulta.push(`SELECT "empresaId", id, codigo, nome, situacao`);
-      consulta.push(`FROM seguranca.perfil`);
-      consulta.push(`WHERE ("empresaId" IN (${parametros})) AND (remocao IS NULL)`);
-      consulta.push(`ORDER BY "empresaId", situacao, administrador DESC, nome;`);
+      consulta.push(`SELECT`);
+      consulta.push(`  "empresaId",`);
+      consulta.push(`  id,`);
+      consulta.push(`  codigo,`);
+      consulta.push(`  nome,`);
+      consulta.push(`  situacao`);
+      consulta.push(`FROM`);
+      consulta.push(`  seguranca.perfil`);
+      consulta.push(`WHERE`);
+      consulta.push(`  ("empresaId" IN (${parametros}))`);
+      consulta.push(`  AND (remocao IS NULL)`);
+      consulta.push(`ORDER BY`);
+      consulta.push(`  "empresaId",`);
+      consulta.push(`  nome;`);
       const perfis:
-        { empresaId: string, id: string, codigo: string, nome: string, situacao: number}[]
+        { empresaId: string, id: string, codigo: string, nome: string, situacao: number, imagens: string[] }[]
         = await this.assistente.leitura.query(consulta.join('\n'), ids);
       consulta.length = 0;
-      consulta.push(`SELECT "usuarioEmpresa"."empresaId", usuario.id, usuario.codigo, usuario.nome, usuario.imagem, usuario.situacao`);
+      consulta.push(`SELECT`);
+      consulta.push(`  "usuarioEmpresa"."empresaId",`);
+      consulta.push(`  usuario.id,`);
+      consulta.push(`  usuario.codigo,`);
+      consulta.push(`  usuario.nome,`);
+      consulta.push(`  usuario.imagem,`);
+      consulta.push(`  usuario.situacao,`);
+      consulta.push(`  "usuarioEmpresa"."estabelecimentoIds",`);
+      consulta.push(`  "usuarioEmpresa"."perfilIds"`);
       consulta.push(`FROM`);
       consulta.push(`  alfa."usuarioEmpresa"`);
       consulta.push(`  JOIN alfa.usuario ON (usuario.id = "usuarioEmpresa"."usuarioId")`);
-      consulta.push(`WHERE ("usuarioEmpresa"."empresaId" IN (${parametros})) AND ("usuarioEmpresa".remocao IS NULL) AND (usuario.remocao IS NULL)`);
-      consulta.push(`ORDER BY "usuarioEmpresa"."empresaId", usuario.situacao, usuario.super DESC, usuario.nome;`);
+      consulta.push(`WHERE`);
+      consulta.push(`  ("usuarioEmpresa"."empresaId" IN (${parametros}))`);
+      consulta.push(`  AND ("usuarioEmpresa".remocao IS NULL)`);
+      consulta.push(`  AND (usuario.remocao IS NULL)`);
+      consulta.push(`ORDER BY`);
+      consulta.push(`  "usuarioEmpresa"."empresaId",`);
+      consulta.push(`  usuario.nome;`);
       const usuarios:
-        { empresaId: string, id: string, codigo: string, nome: string, situacao: number}[]
+        { empresaId: string, id: string, codigo: string, nome: string, imagem: string, situacao: number, estabelecimentoIds: string[], perfilIds: string[]}[]
         = await this.assistente.leitura.query(consulta.join('\n'), ids);
+      for (const estabelecimento of estabelecimentos) {
+        estabelecimento.imagens = [];
+        usuarios.forEach(usuario => {
+          if (usuario.empresaId !== estabelecimento.empresaId) {
+            return;
+          }
+          if (
+            (!usuario.estabelecimentoIds?.length || usuario.estabelecimentoIds.includes(estabelecimento.id))
+            && !estabelecimento.imagens.includes(usuario.imagem)
+          ) {
+            estabelecimento.imagens.push(usuario.imagem);
+          }
+        });
+      }
+      for (const perfil of perfis) {
+        perfil.imagens = [];
+        usuarios.forEach(usuario => {
+          if (usuario.empresaId !== perfil.empresaId) {
+            return;
+          }
+          if (
+            (!usuario.perfilIds?.length || usuario.perfilIds.includes(perfil.id))
+            && !perfil.imagens.includes(usuario.imagem)
+          ) {
+            perfil.imagens.push(usuario.imagem);
+          }
+        });
+      }
       for (const empresa of empresas) {
         empresa['estabelecimentos'] = estabelecimentos
           .filter(estabelecimento => estabelecimento.empresaId === empresa.id)
