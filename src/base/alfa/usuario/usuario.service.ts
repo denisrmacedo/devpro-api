@@ -241,7 +241,7 @@ export class UsuarioService {
     return usuario;
   }
 
-  async editaEmpresa(identificacao: Identificacao, id: string, parametros: { empresa: Empresa, associa: boolean }): Promise<Usuario> {
+  async editaEmpresa(identificacao: Identificacao, id: string, parametros: { empresa: Empresa, estabelecimentoIds: string[], perfilIds: string[], associa: boolean }): Promise<Usuario> {
     const usuario = await this.leituraRepository
       .findOneOrFail({
         where: { id },
@@ -256,6 +256,8 @@ export class UsuarioService {
         const usuarioEmpresa = new UsuarioEmpresa();
         usuarioEmpresa.usuario = usuario;
         usuarioEmpresa.empresa = parametros.empresa;
+        usuarioEmpresa.estabelecimentoIds = parametros.estabelecimentoIds;
+        usuarioEmpresa.perfilIds = parametros.perfilIds;
         usuarioEmpresa.situacao = 1;
         this.assistente.gravacao.getRepository(UsuarioEmpresa)
           .save(usuarioEmpresa);
