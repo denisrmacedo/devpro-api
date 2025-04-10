@@ -43,6 +43,8 @@ export class BaseMovimento_ {
 export enum Modelo {
   Usuario = +'030100',
   Empresa = +'030200',
+  Estabelecimento = +'030300',
+  Cnae = +'040100',
   Perfil = +'020100',
   Servidor = +'010100',
 }
@@ -50,6 +52,7 @@ export enum Modelo {
 /*
   Esquema
     Alfa = 03
+    Governo = 04
     Seguranca = 02
     Sistema = 01
 */

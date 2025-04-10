@@ -8,6 +8,8 @@ import { BaseModule } from './base/base.module';
 import { AutenticacaoModule } from './autenticacao/autenticacao.module';
 import { UsuarioModule } from './base/alfa/usuario/usuario.module';
 import { EmpresaModule } from './base/alfa/empresa/empresa.module';
+import { EstabelecimentoModule } from './base/alfa/estabelecimento/estabelecimento.module';
+import { CnaeModule } from './base/governo/cnae/cnae.module';
 import { PerfilModule } from './base/seguranca/perfil/perfil.module';
 import { ServidorModule } from './base/sistema/servidor/servidor.module';
 import { DashboardModule } from './avaliacao/analise/dashboard/dashboard.module';
@@ -21,6 +23,8 @@ import { ArquivoModule } from './integracao/arquivo/arquivo.module';
     AutenticacaoModule,
     DashboardModule,
     EmpresaModule,
+    EstabelecimentoModule,
+    CnaeModule,
     UsuarioModule,
     PerfilModule,
     ServidorModule,

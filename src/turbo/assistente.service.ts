@@ -236,7 +236,7 @@ export class AssistenteService {
       consulta.push(`SELECT count(*) quantidade`);
       consulta.push(`FROM ${esquema}.${tabela}`);
       consulta.push(`WHERE`);
-      consulta.push(`  (empresa = '${empresa.id}')`);
+      consulta.push(`  ("empresaId" = '${empresa.id}')`);
       if (typeof (valor) === 'string') {
         consulta.push(`  AND (versal(${chave}) = versal('${valor}'))`);
       } else {
