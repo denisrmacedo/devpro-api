@@ -6,7 +6,7 @@ import { Pagina } from 'src/turbo/assistente.service';
 import { AutorizacaoService } from './autorizacao.service';
 import { Autorizacao } from './modelo/autorizacao.entity';
 
-@Controller('base/alfa/autorizacao')
+@Controller('base/administrativo/autorizacao')
 export class AutorizacaoController {
   constructor(private readonly autorizacaoService: AutorizacaoService) {}
 

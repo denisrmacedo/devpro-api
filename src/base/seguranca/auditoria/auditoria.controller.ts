@@ -6,7 +6,7 @@ import { Pagina } from 'src/turbo/assistente.service';
 import { AuditoriaService } from './auditoria.service';
 import { Auditoria } from './modelo/auditoria.entity';
 
-@Controller('base/alfa/auditoria')
+@Controller('base/administrativo/auditoria')
 export class AuditoriaController {
   constructor(private readonly auditoriaService: AuditoriaService) {}
 

@@ -6,8 +6,8 @@ import { AutenticacaoGuard } from './autenticacao.guard';
 import { TurboModule } from 'src/turbo/turbo.module';
 import { AutenticacaoService } from './autenticacao.service';
 import { AutenticacaoController } from './autenticacao.controller';
-import { UsuarioModule } from 'src/base/alfa/usuario/usuario.module';
-import { EmpresaModule } from 'src/base/alfa/empresa/empresa.module';
+import { UsuarioModule } from 'src/base/administrativo/usuario/usuario.module';
+import { EmpresaModule } from 'src/base/administrativo/empresa/empresa.module';
 import { AutorizacaoModule } from 'src/base/seguranca/autorizacao/autorizacao.module';
 
 @Module({

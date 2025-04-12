@@ -2,7 +2,7 @@ import { Entity, Column, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, Length, ValidateNested } from 'class-validator';
 
 import { Base, BaseTabela_ } from 'src/base/base';
-import { Empresa_ } from 'src/base/alfa/empresa/modelo/empresa.entity';
+import { Empresa_ } from 'src/base/administrativo/empresa/modelo/empresa.entity';
 import { Type } from 'class-transformer';
 import { PerfilRota } from './perfil-rota.entity';
 
@@ -15,42 +15,42 @@ export class Perfil extends Base {
 
   @IsOptional()
   @IsString() @Length(2, 20)
-  @Column('varchar', { nullable: false, length: 80 })
+  @Column('varchar')
   codigo: string;
 
   @IsNotEmpty()
   @IsString() @Length(2, 80)
-  @Column('varchar', { nullable: false, length: 80 })
+  @Column('varchar')
   nome: string;
 
   @IsOptional()
   @IsString() @Length(2, 800)
-  @Column('varchar', { nullable: true, length: 800 })
+  @Column('varchar')
   descricao: string;
 
   @IsOptional()
   @IsUrl() @Length(2, 800)
-  @Column('varchar', { nullable: true, length: 800 })
+  @Column('varchar')
   imagem: string;
 
   @IsNotEmpty()
   @IsNumber()
-  @Column('smallint', { nullable: false })
+  @Column('smallint')
   situacao: PerfilSituacao;
 
   @IsOptional()
   @IsBoolean()
-  @Column('boolean', { nullable: false })
+  @Column('boolean')
   atuante: boolean;
 
   @IsOptional()
   @IsArray()
-  @Column('varchar', { nullable: true, array: true })
+  @Column('varchar', { array: true })
   etiquetas: string[];
 
   @IsNotEmpty()
   @IsBoolean()
-  @Column('boolean', { nullable: false })
+  @Column('boolean')
   administrador: boolean;
 
   @Type(() => PerfilRota)

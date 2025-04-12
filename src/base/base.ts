@@ -51,7 +51,7 @@ export enum Modelo {
 
 /*
   Esquema
-    Alfa = 03
+    Administrativo = 03
     Governo = 04
     Seguranca = 02
     Sistema = 01

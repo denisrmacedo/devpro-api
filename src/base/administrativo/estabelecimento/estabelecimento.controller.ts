@@ -6,7 +6,7 @@ import { Pagina } from 'src/turbo/assistente.service';
 import { Estabelecimento } from './modelo/estabelecimento.entity';
 import { EstabelecimentoService } from './estabelecimento.service';
 
-@Controller('base/alfa/estabelecimento')
+@Controller('base/administrativo/estabelecimento')
 export class EstabelecimentoController {
   constructor(private readonly estabelecimentoService: EstabelecimentoService) {}
 

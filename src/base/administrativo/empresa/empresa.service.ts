@@ -51,7 +51,7 @@ export class EmpresaService {
       consulta.push(`  codigo,`);
       consulta.push(`  nome,`);
       consulta.push(`  situacao`);
-      consulta.push(`FROM alfa.estabelecimento`);
+      consulta.push(`FROM administrativo.estabelecimento`);
       consulta.push(`WHERE`);
       consulta.push(`  ("empresaId" IN (${parametros}))`);
       consulta.push(`  AND (remocao IS NULL)`);
@@ -90,8 +90,8 @@ export class EmpresaService {
       consulta.push(`  "usuarioEmpresa"."estabelecimentoIds",`);
       consulta.push(`  "usuarioEmpresa"."perfilIds"`);
       consulta.push(`FROM`);
-      consulta.push(`  alfa."usuarioEmpresa"`);
-      consulta.push(`  JOIN alfa.usuario ON (usuario.id = "usuarioEmpresa"."usuarioId")`);
+      consulta.push(`  administrativo."usuarioEmpresa"`);
+      consulta.push(`  JOIN administrativo.usuario ON (usuario.id = "usuarioEmpresa"."usuarioId")`);
       consulta.push(`WHERE`);
       consulta.push(`  ("usuarioEmpresa"."empresaId" IN (${parametros}))`);
       consulta.push(`  AND ("usuarioEmpresa".remocao IS NULL)`);

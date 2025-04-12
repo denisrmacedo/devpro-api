@@ -6,7 +6,7 @@ import { Pagina } from 'src/turbo/assistente.service';
 import { Usuario } from './modelo/usuario.entity';
 import { UsuarioService } from './usuario.service';
 
-@Controller('base/alfa/usuario')
+@Controller('base/administrativo/usuario')
 export class UsuarioController {
   constructor(private readonly usuarioService: UsuarioService) {}
 

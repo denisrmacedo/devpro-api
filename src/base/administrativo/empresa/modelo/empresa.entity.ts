@@ -4,51 +4,51 @@ import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsObject, IsOptional, IsUrl, 
 import { Base, BaseTabela_ } from 'src/base/base';
 import { Servidor_ } from 'src/base/sistema/servidor/modelo/servidor.entity';
 
-@Entity('alfa.empresa')
+@Entity('administrativo.empresa')
 export class Empresa extends Base {
   @IsOptional()
   @Length(2, 20)
-  @Column('varchar', { nullable: false })
+  @Column('varchar')
   codigo: string;
 
   @IsNotEmpty()
   @Length(2, 80)
-  @Column('varchar', { nullable: false })
+  @Column('varchar')
   nome: string;
 
   @IsOptional()
   @IsUrl()
-  @Column('varchar', { nullable: true, length: 800 })
+  @Column('varchar')
   imagem: string;
 
   @IsNotEmpty()
   @IsNumber()
-  @Column('smallint', { nullable: false })
+  @Column('smallint')
   situacao: EmpresaSituacao;
 
   @IsOptional()
   @IsBoolean()
-  @Column('boolean', { nullable: false })
+  @Column('boolean')
   atuante: boolean;
 
   @IsOptional()
   @IsArray()
-  @Column('varchar', { nullable: true, array: true })
+  @Column('varchar', { array: true })
   etiquetas: string[];
 
   @IsNotEmpty()
   @IsBoolean()
-  @Column('boolean', { nullable: false })
+  @Column('boolean')
   super: boolean;
 
   @IsNotEmpty()
   @IsNumber()
-  @Column('smallint', { nullable: false })
+  @Column('smallint')
   atividade: EmpresaAtividade;
 
   @IsOptional()
   @Length(1, 800)
-  @Column('varchar', { nullable: true })
+  @Column('varchar')
   observacoes: string;
 
   @IsNotEmpty()
@@ -85,7 +85,7 @@ export enum EmpresaAtividade {
   Governo = 30,
 }
 
-@Entity('alfa.empresa')
+@Entity('administrativo.empresa')
 export class Empresa_ extends BaseTabela_ {
   @Column()
   imagem: string;

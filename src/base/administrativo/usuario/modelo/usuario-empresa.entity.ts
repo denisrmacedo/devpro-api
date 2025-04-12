@@ -5,7 +5,7 @@ import { Base, BaseSituacao } from 'src/base/base';
 import { Usuario } from './usuario.entity';
 import { Empresa_ } from '../../empresa/modelo/empresa.entity';
 
-@Entity('alfa.usuarioEmpresa')
+@Entity('administrativo.usuarioEmpresa')
 export class UsuarioEmpresa extends Base {
   @ManyToOne(() => Usuario, usuario => usuario.usuarioEmpresas)
   usuario: Usuario;

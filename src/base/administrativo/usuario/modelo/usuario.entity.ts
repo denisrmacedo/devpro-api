@@ -7,66 +7,66 @@ import { Empresa_ } from '../../empresa/modelo/empresa.entity';
 import { UsuarioCredencial } from './usuario-credencial.entity';
 import { UsuarioEmpresa } from './usuario-empresa.entity';
 
-@Entity('alfa.usuario')
+@Entity('administrativo.usuario')
 export class Usuario extends Base {
   @IsOptional()
   @Length(2, 20)
-  @Column('varchar', { nullable: false })
+  @Column('varchar')
   codigo: string;
 
   @IsNotEmpty()
   @Length(2, 80)
-  @Column('varchar', { nullable: false })
+  @Column('varchar')
   nome: string;
 
   @IsOptional()
   @IsUrl()
-  @Column('varchar', { nullable: true })
+  @Column('varchar')
   imagem: string;
 
   @IsNotEmpty()
   @IsNumber()
-  @Column('smallint', { nullable: false })
+  @Column('smallint')
   situacao: UsuarioSituacao;
 
   @IsOptional()
   @IsBoolean()
-  @Column('boolean', { nullable: false })
+  @Column('boolean')
   atuante: boolean;
 
   @IsOptional()
   @IsArray()
-  @Column('varchar', { nullable: true, array: true })
+  @Column('varchar', { array: true })
   etiquetas: string[];
 
   @IsNotEmpty()
   @IsBoolean()
-  @Column('boolean', { nullable: false })
+  @Column('boolean')
   super: boolean;
 
   @IsNotEmpty()
   @IsBoolean()
-  @Column('boolean', { nullable: false })
+  @Column('boolean')
   administrador: boolean;
 
   @IsOptional()
   @Length(1, 80)
-  @Column('varchar', { nullable: true })
+  @Column('varchar')
   celular: string;
 
   @IsOptional()
   @Length(1, 80)
-  @Column('varchar', { nullable: true })
+  @Column('varchar')
   email: string;
 
   @IsNotEmpty()
   @IsNumber()
-  @Column('smallint', { nullable: false })
+  @Column('smallint')
   tema: UsuarioTema;
 
   @IsOptional()
   @Length(1, 800)
-  @Column('varchar', { nullable: true })
+  @Column('varchar')
   observacoes: string;
 
   @IsOptional()
@@ -109,7 +109,7 @@ export enum UsuarioTema {
   Sistema = 2,
 }
 
-@Entity('alfa.usuario')
+@Entity('administrativo.usuario')
 export class Usuario_ extends BaseTabela_ {
   @Column()
   imagem: string;

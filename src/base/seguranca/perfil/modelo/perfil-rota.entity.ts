@@ -11,41 +11,41 @@ export class PerfilRota extends Base {
 
   @IsNotEmpty()
   @IsString() @Length(10, 200)
-  @Column('varchar', { nullable: false, length: 200 })
+  @Column('varchar')
   rota: string;
 
   @IsNotEmpty()
   @IsNumber()
-  @Column('smallint', { nullable: false })
+  @Column('smallint')
 	acessar: number;
 
   @IsNotEmpty()
   @IsNumber()
-  @Column('smallint', { nullable: false })
+  @Column('smallint')
 	adicionar: number;
 
   @IsNotEmpty()
   @IsNumber()
-  @Column('smallint', { nullable: false })
+  @Column('smallint')
 	editar: number;
 
   @IsNotEmpty()
   @IsNumber()
-  @Column('smallint', { nullable: false })@Column()
+  @Column('smallint')@Column()
 	remover: number;
 
   @IsNotEmpty()
   @IsNumber()
-  @Column('smallint', { nullable: false })
+  @Column('smallint')
 	compartilhar: number;
 
   @IsNotEmpty()
   @IsNumber()
-  @Column('smallint', { nullable: false })
+  @Column('smallint')
 	aprovar: number;
 
   @IsNotEmpty()
   @IsNumber()
-  @Column('smallint', { nullable: false })
+  @Column('smallint')
 	reverter: number;
 }

@@ -7,47 +7,47 @@ import { Base, BaseTabela_ } from 'src/base/base';
 export class Cnae extends Base {
   @IsOptional()
   @Length(1, 40)
-  @Column('varchar', { nullable: false })
+  @Column('varchar')
   codigo: string;
 
   @IsNotEmpty()
   @Length(2, 200)
-  @Column('varchar', { nullable: false })
+  @Column('varchar')
   nome: string;
 
   @IsOptional()
   @Length(2, 200)
-  @Column('varchar', { nullable: false })
+  @Column('varchar')
   descricao: string;
 
   @IsNotEmpty()
   @IsNumber()
-  @Column('smallint', { nullable: false })
+  @Column('smallint')
   situacao: CnaeSituacao;
 
   @IsOptional()
   @IsBoolean()
-  @Column('boolean', { nullable: false })
+  @Column('boolean')
   atuante: boolean;
 
   @IsOptional()
   @IsArray()
-  @Column('varchar', { nullable: true, array: true })
+  @Column('varchar', { array: true })
   etiquetas: string[];
 
   @IsOptional()
   @IsAlpha()
-  @Column('varchar', { nullable: false })
+  @Column('varchar')
   area: string;
 
   @IsNotEmpty()
   @IsBoolean()
-  @Column('boolean', { nullable: false })
+  @Column('boolean')
   fatorR: string;
 
   @IsOptional()
   @IsNumber()
-  @Column('decimal', { nullable: false })
+  @Column('decimal')
   fatorRAliquota: number;
 }
 

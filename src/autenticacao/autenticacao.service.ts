@@ -5,10 +5,10 @@ import * as bcrypt from 'bcrypt';
 import { AutorizacaoCompleta, Identificacao } from './identificacao';
 import { Credencial } from './credencial';
 import { AssistenteService } from 'src/turbo/assistente.service';
-import { UsuarioService } from 'src/base/alfa/usuario/usuario.service';
-import { EmpresaService } from 'src/base/alfa/empresa/empresa.service';
+import { UsuarioService } from 'src/base/administrativo/usuario/usuario.service';
+import { EmpresaService } from 'src/base/administrativo/empresa/empresa.service';
 import { AutorizacaoService } from 'src/base/seguranca/autorizacao/autorizacao.service';
-import { Empresa } from 'src/base/alfa/empresa/modelo/empresa.entity';
+import { Empresa } from 'src/base/administrativo/empresa/modelo/empresa.entity';
 
 @Injectable()
 export class AutenticacaoService {
@@ -142,7 +142,7 @@ export class AutenticacaoService {
     consulta.push(`FROM`);
     consulta.push(`  seguranca."perfilRota"`);
     consulta.push(`WHERE`);
-    consulta.push(`  ("perfilId" IN (SELECT UNNEST("perfilIds") FROM alfa."usuarioEmpresa" WHERE "usuarioId" = '${id}') AND (remocao IS NULL))`);
+    consulta.push(`  ("perfilId" IN (SELECT UNNEST("perfilIds") FROM administrativo."usuarioEmpresa" WHERE "usuarioId" = '${id}') AND (remocao IS NULL))`);
     consulta.push(`  AND (remocao IS NULL)`);
     consulta.push(`GROUP BY`);
     consulta.push(`  rota`);

@@ -6,7 +6,7 @@ import { Pagina } from 'src/turbo/assistente.service';
 import { Empresa } from './modelo/empresa.entity';
 import { EmpresaService } from './empresa.service';
 
-@Controller('base/alfa/empresa')
+@Controller('base/administrativo/empresa')
 export class EmpresaController {
   constructor(private readonly empresaService: EmpresaService) {}
 

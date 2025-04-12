@@ -45,7 +45,7 @@ export class UsuarioService {
     }
     if (criterios.email) {
       options.where.push({
-        id: Raw((alias) => `${alias} IN (${this.assistente.consultaIds('alfa.usuarioCredencial', 'usuarioId', { chave: criterios.email })})`)
+        id: Raw((alias) => `${alias} IN (${this.assistente.consultaIds('administrativo.usuarioCredencial', 'usuarioId', { chave: criterios.email })})`)
       });
     }
     const contagem = await this.leituraRepository.count(options);

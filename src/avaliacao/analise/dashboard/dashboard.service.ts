@@ -20,7 +20,7 @@ export class DashboardService {
     consulta.push(`WITH`);
     consulta.push(`usuario AS (`);
     consulta.push(`  SELECT COUNT(*) "quantidade"`);
-    consulta.push(`  FROM alfa.usuario`);
+    consulta.push(`  FROM administrativo.usuario`);
     consulta.push(`  WHERE`);
     consulta.push(`    (adicao BETWEEN '${criterios.inicio}' AND '${criterios.conclusao}T23:59:59.910Z')`);
     consulta.push(`    AND (remocao IS NULL)`);
