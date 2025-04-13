@@ -70,7 +70,8 @@ export class EstabelecimentoService {
       order: { situacao: 1, super: -1, nome: 1 },
       loadEagerRelations: false,
     };
-    options.where = [{ empresa: { id: identificacao.empresa.id } }];
+    criterios.empresaId ??= identificacao.empresa.id;
+    options.where = [{ empresa: { id: criterios.empresaId }}];
     if (criterios.atuante) {
       options.where.push({ atuante: true });
     }

@@ -66,7 +66,8 @@ export class PerfilService {
       order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,
     };
-    options.where = [{ empresa: { id: identificacao.empresa.id }}];
+    criterios.empresaId ??= identificacao.empresa.id;
+    options.where = [{ empresa: { id: criterios.empresaId }}];
     if (criterios.atuante) {
       options.where.push({ atuante: true });
     }
@@ -99,7 +100,6 @@ export class PerfilService {
     });
   }
   async salva(identificacao: Identificacao, perfil: Perfil): Promise<Perfil> {
-    this.assistente.autoriza(identificacao, perfil);
     perfil.atuante = perfil.situacao === PerfilSituacao.Ativo;
     await this.assistente.unico(this.gravacaoRepository, { perfil }, {
       codigo: 'codigo', nome: 'nome',
