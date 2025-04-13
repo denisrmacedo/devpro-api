@@ -20,7 +20,7 @@ export class CnaeService {
   async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<Cnae>> {
     this.assistente.adapta(criterios);
     const options: FindManyOptions<Cnae> = {
-      order: { situacao: 1, codigo: 1 },
+      order: { situacao: 1, nivel: 1 },
       loadEagerRelations: false,
       skip: criterios.salto,
       take: criterios.linhas,
@@ -62,7 +62,7 @@ export class CnaeService {
     this.assistente.adapta(criterios);
     const options: FindManyOptions<Cnae> = {
       select: { id: true, codigo: true, nome: true, situacao: true },
-      order: { situacao: 1, codigo: 1 },
+      order: { situacao: 1, nivel: 1 },
       loadEagerRelations: false,
     };
     if (criterios.atuante) {
@@ -94,23 +94,23 @@ export class CnaeService {
   }
   async salva(identificacao: Identificacao, cnae: Cnae): Promise<Cnae> {
     cnae.atuante = cnae.situacao === CnaeSituacao.Ativa;
-    cnae.nivel = cnae.secao;
     cnae.codigo = cnae.secao;
+    cnae.nivel = cnae.secao;
     if (cnae.divisao) {
-      cnae.nivel = cnae.secao + cnae.divisao;
       cnae.codigo = cnae.divisao;
+      cnae.nivel = cnae.secao + cnae.divisao;
     }
     if (cnae.grupo) {
-      cnae.nivel = cnae.secao + cnae.grupo;
       cnae.codigo = cnae.grupo;
+      cnae.nivel = cnae.secao + cnae.grupo;
     }
     if (cnae.classe) {
-      cnae.nivel = cnae.secao + cnae.classe;
       cnae.codigo = cnae.classe;
+      cnae.nivel = cnae.secao + cnae.classe;
     }
     if (cnae.subclasse) {
-      cnae.nivel = cnae.secao + cnae.subclasse;
       cnae.codigo = cnae.subclasse;
+      cnae.nivel = cnae.secao + cnae.subclasse;
     }
     await this.assistente.unico(this.gravacaoRepository, { cnae }, {
       codigo: 'código', nivel: 'nivel',
