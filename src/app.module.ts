@@ -10,6 +10,7 @@ import { UsuarioModule } from './base/administrativo/usuario/usuario.module';
 import { EmpresaModule } from './base/administrativo/empresa/empresa.module';
 import { EstabelecimentoModule } from './base/administrativo/estabelecimento/estabelecimento.module';
 import { CnaeModule } from './base/governo/cnae/cnae.module';
+import { NaturezaJuridicaModule } from './base/governo/natureza-juridica/natureza-juridica.module';
 import { PerfilModule } from './base/seguranca/perfil/perfil.module';
 import { ServidorModule } from './base/sistema/servidor/servidor.module';
 import { DashboardModule } from './avaliacao/analise/dashboard/dashboard.module';
@@ -25,6 +26,7 @@ import { ArquivoModule } from './integracao/arquivo/arquivo.module';
     EmpresaModule,
     EstabelecimentoModule,
     CnaeModule,
+    NaturezaJuridicaModule,
     UsuarioModule,
     PerfilModule,
     ServidorModule,

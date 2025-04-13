@@ -1,3 +1,4 @@
+import { NaturezaJuridica } from './governo/natureza-juridica/modelo/natureza-juridica.entity';
 import { Column, CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
 
 export class Base {
@@ -45,6 +46,7 @@ export enum Modelo {
   Empresa = +'030200',
   Estabelecimento = +'030300',
   Cnae = +'040100',
+  NaturezaJuridica = +'040200',
   Perfil = +'020100',
   Servidor = +'010100',
 }
