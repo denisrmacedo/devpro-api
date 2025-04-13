@@ -1,14 +1,44 @@
 import { Entity, Column } from 'typeorm';
-import { IsAlpha, IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, Length } from 'class-validator';
+import { IsAlpha, IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, Length } from 'class-validator';
 
 import { Base, BaseTabela_ } from 'src/base/base';
 
 @Entity('governo.cnae')
 export class Cnae extends Base {
   @IsOptional()
-  @Length(1, 40)
+  @IsString() @Length(1, 40)
   @Column('varchar')
   codigo: string;
+
+  @IsOptional()
+  @IsString() @Length(1, 40)
+  @Column('varchar')
+  nivel: string;
+
+  @IsNotEmpty()
+  @IsAlpha() @Length(1, 1)
+  @Column('varchar')
+  secao: string;
+
+  @IsOptional()
+  @IsString() @Length(1, 10)
+  @Column('varchar')
+  divisao: string;
+
+  @IsOptional()
+  @IsString() @Length(1, 10)
+  @Column('varchar')
+  grupo: string;
+
+  @IsOptional()
+  @IsString() @Length(1, 10)
+  @Column('varchar')
+  classe: string;
+
+  @IsOptional()
+  @Length(1, 10)
+  @Column('varchar')
+  subclasse: string;
 
   @IsNotEmpty()
   @Length(2, 200)
@@ -35,11 +65,6 @@ export class Cnae extends Base {
   @Column('varchar', { array: true })
   etiquetas: string[];
 
-  @IsOptional()
-  @IsAlpha()
-  @Column('varchar')
-  area: string;
-
   @IsNotEmpty()
   @IsBoolean()
   @Column('boolean')
@@ -59,7 +84,4 @@ export enum CnaeSituacao {
 }
 
 @Entity('governo.cnae')
-export class Cnae_ extends BaseTabela_ {
-  @Column()
-  imagem: string;
-}
+export class Cnae_ extends BaseTabela_ { }

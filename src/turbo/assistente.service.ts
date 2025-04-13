@@ -18,6 +18,7 @@ import { Base, Modelo, Procedimento } from 'src/base/base';
 export class Pagina<T> {
   numero: number;
   paginas: number;
+  total: number;
   linhas: T[];
 }
 
@@ -143,10 +144,11 @@ export class AssistenteService {
     criterios.conclusao = conclusao.toISODate();
   }
 
-  pagina<T>(criterios: any, contagem: number, linhas: T[]): Pagina<T> {
+  pagina<T>(criterios: any, total: number, linhas: T[]): Pagina<T> {
     return {
       numero: +criterios.pagina,
-      paginas: Math.ceil(contagem / (+criterios.linhas || 1)),
+      paginas: Math.ceil(total / (+criterios.linhas || 1)),
+      total,
       linhas,
     };
   }

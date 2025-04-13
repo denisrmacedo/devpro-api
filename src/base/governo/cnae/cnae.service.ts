@@ -94,12 +94,27 @@ export class CnaeService {
   }
   async salva(identificacao: Identificacao, cnae: Cnae): Promise<Cnae> {
     cnae.atuante = cnae.situacao === CnaeSituacao.Ativa;
-    await this.assistente.unico(this.gravacaoRepository, { cnae }, {
-      codigo: 'código',
-    });
-    if (!cnae.codigo) {
-      await this.assistente.sequencia(this.gravacaoRepository, cnae, '', 7);
+    cnae.nivel = cnae.secao;
+    cnae.codigo = cnae.secao;
+    if (cnae.divisao) {
+      cnae.nivel = cnae.secao + cnae.divisao;
+      cnae.codigo = cnae.divisao;
     }
+    if (cnae.grupo) {
+      cnae.nivel = cnae.secao + cnae.grupo;
+      cnae.codigo = cnae.grupo;
+    }
+    if (cnae.classe) {
+      cnae.nivel = cnae.secao + cnae.classe;
+      cnae.codigo = cnae.classe;
+    }
+    if (cnae.subclasse) {
+      cnae.nivel = cnae.secao + cnae.subclasse;
+      cnae.codigo = cnae.subclasse;
+    }
+    await this.assistente.unico(this.gravacaoRepository, { cnae }, {
+      codigo: 'código', nivel: 'nivel',
+    });
     const novo = cnae.novo;
     return this.gravacaoRepository
       .save(cnae)
