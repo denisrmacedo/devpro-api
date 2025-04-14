@@ -47,6 +47,7 @@ export enum Modelo {
   Estabelecimento = +'030300',
   Cnae = +'040100',
   NaturezaJuridica = +'040200',
+  GrupoTributario = +'040300',
   Perfil = +'020100',
   Servidor = +'010100',
 }

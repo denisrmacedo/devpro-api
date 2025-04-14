@@ -184,8 +184,8 @@ export class AssistenteService {
       }
       var valor = instancia[chave];
       const consulta: string[] = [];
-      consulta.push(`SELECT count(*) quantidade`);
-      consulta.push(`FROM ${esquema}.${tabela}`);
+      consulta.push(`SELECT COUNT(*) quantidade`);
+      consulta.push(`FROM "${esquema}"."${tabela}"`);
       consulta.push(`WHERE`);
       if (typeof (valor) === 'string') {
         consulta.push(`  (versal(${chave}) = versal('${valor}'))`);
@@ -235,8 +235,8 @@ export class AssistenteService {
       }
       var valor = instancia[chave];
       const consulta: string[] = [];
-      consulta.push(`SELECT count(*) quantidade`);
-      consulta.push(`FROM ${esquema}.${tabela}`);
+      consulta.push(`SELECT COUNT(*) quantidade`);
+      consulta.push(`FROM "${esquema}"."${tabela}"`);
       consulta.push(`WHERE`);
       consulta.push(`  ("empresaId" = '${empresa.id}')`);
       if (typeof (valor) === 'string') {
