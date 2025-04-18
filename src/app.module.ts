@@ -9,6 +9,8 @@ import { AutenticacaoModule } from './autenticacao/autenticacao.module';
 import { UsuarioModule } from './base/administrativo/usuario/usuario.module';
 import { EmpresaModule } from './base/administrativo/empresa/empresa.module';
 import { EstabelecimentoModule } from './base/administrativo/estabelecimento/estabelecimento.module';
+import { PaisModule } from './base/geografia/pais/pais.module';
+import { TerritorioModule } from './base/geografia/territorio/territorio.module';
 import { CnaeModule } from './base/governo/cnae/cnae.module';
 import { NaturezaJuridicaModule } from './base/governo/natureza-juridica/natureza-juridica.module';
 import { GrupoTributarioModule } from './base/governo/grupo-tributario/grupo-tributario.module';
@@ -26,6 +28,8 @@ import { ArquivoModule } from './integracao/arquivo/arquivo.module';
     DashboardModule,
     EmpresaModule,
     EstabelecimentoModule,
+    PaisModule,
+    TerritorioModule,
     CnaeModule,
     NaturezaJuridicaModule,
     GrupoTributarioModule,

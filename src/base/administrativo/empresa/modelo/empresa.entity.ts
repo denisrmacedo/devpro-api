@@ -17,7 +17,7 @@ export class Empresa extends Base {
   nome: string;
 
   @IsOptional()
-  @IsUrl()
+  @IsUrl() @Length(1, 800)
   @Column('varchar')
   imagem: string;
 
