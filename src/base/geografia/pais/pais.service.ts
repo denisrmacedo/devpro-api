@@ -39,7 +39,34 @@ export class PaisService {
       options.where.push({ nome: Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome }) });
     }
     const contagem = await this.leituraRepository.count(options);
-    const paises = await this.leituraRepository.find(options);
+    const query = this.leituraRepository
+      .createQueryBuilder('pais')
+      .orderBy(`(iso2 <> '${identificacao.nacao}')::int`)
+      .addOrderBy('pais.nome')
+      .take(criterios.linhas)
+      .skip(criterios.salto);
+    if (criterios.situacao) {
+      query.andWhere({ situacao: criterios.situacao });
+    }
+    if (criterios.codigo) {
+      query.andWhere({ codigo: Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.codigo }) });
+    }
+    if (criterios.nome) {
+      query.andWhere({ nome: Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome }) });
+    }
+    const paises = await query.getMany().then(
+      paises => {
+        if (criterios.pagina === 1) {
+          for (const pais of paises) {
+            if (pais.iso2 === identificacao.nacao) {
+              pais['destaque'] = true;
+            }
+            break;
+          }
+        }
+        return paises;
+      }
+    );
     return this.assistente.pagina(criterios, contagem, paises);
   }
 
@@ -60,15 +87,27 @@ export class PaisService {
 
   async lista(identificacao: Identificacao, criterios: any): Promise<Pais[]> {
     this.assistente.adapta(criterios);
-    const options: FindManyOptions<Pais> = {
-      select: { id: true, codigo: true, nome: true, situacao: true },
-      order: { situacao: 1, nome: 1 },
-      loadEagerRelations: false,
-    };
+    const query = this.leituraRepository
+      .createQueryBuilder('pais')
+      .select(['id', 'codigo', 'nome', 'imagem', 'situacao'])
+      .orderBy(`(iso2 <> '${identificacao.nacao}')::int`)
+      .addOrderBy('pais.nome');
     if (criterios.atuante) {
-      options.where = [{ atuante: true }];
+      query.andWhere({ atuante: true });
     }
-    return this.leituraRepository.find(options);
+    const paises = await query.getMany();
+    // const paises = await query.getMany().then(
+    //   paises => {
+    //     for (const pais of paises) {
+    //       if (pais.iso2 === identificacao.nacao) {
+    //         pais['destaque'] = true;
+    //       }
+    //       break;
+    //     }
+    //     return paises;
+    //   }
+    // );
+    return paises;
   }
 
   async busca(identificacao: Identificacao, criterios: any): Promise<Pais[]> {

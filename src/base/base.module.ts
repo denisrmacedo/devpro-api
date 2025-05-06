@@ -19,6 +19,9 @@ types.setTypeParser(types.builtins.NUMERIC, (value: string) => parseFloat(value)
       password: process.env.DB_GRAVACAO_PASSWORD,
       database: process.env.DB_GRAVACAO_DATABASE,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      ssl: {
+        rejectUnauthorized: false,
+      },
       logger: 'advanced-console',
       logging: 'all',
       synchronize: false,
@@ -32,9 +35,14 @@ types.setTypeParser(types.builtins.NUMERIC, (value: string) => parseFloat(value)
       password: process.env.DB_LEITURA_PASSWORD,
       database: process.env.DB_LEITURA_DATABASE,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      ssl: {
+        rejectUnauthorized: false,
+      },
       logger: 'advanced-console',
       logging: 'all',
       synchronize: false,
+      //https://medium.com/@penetra.okulo/error-no-pg-hba-conf-71f74a24c6e7
+      //https://github.com/dbeaver/dbeaver/issues/21616
     }),
   ],
 })

@@ -31,7 +31,7 @@ export class AutenticacaoService {
     if (!(credencial.chave && credencial.senha)) {
       throw new UnauthorizedException('credenciais inválidas');
     }
-    if (!(empresa.id)) {
+    if (!empresa.id) {
       throw new UnauthorizedException('empresa inválida');
     }
     return this.autorizacao(credencial, empresa);
@@ -85,6 +85,7 @@ export class AutenticacaoService {
       ip: credencial.ip,
       aplicativo: credencial.aplicativo || 1,
       navegador: credencial.navegador || 'chrome',
+      nacao: credencial.nacao || 'BR',
       horario: credencial.horario || 'UTC+0',
       inicio: new Date(),
       conclusao: new Date(Date.now() + ((24 * 60 * 60 * 1000) - 1000)),
@@ -103,6 +104,7 @@ export class AutenticacaoService {
         nome: empresa.nome,
         imagem: empresa.imagem,
       },
+      nacao: autorizacao.nacao,
       horario: autorizacao.horario,
       inicio: autorizacao.inicio,
       conclusao: autorizacao.conclusao,

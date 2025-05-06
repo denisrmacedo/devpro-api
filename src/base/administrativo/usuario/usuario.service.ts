@@ -137,18 +137,18 @@ export class UsuarioService {
           perfilIds.push(...usuarioEmpresa.perfilIds);
         }
       }
-      if (!perfilIds.length) {
-        perfilIds = [this.assistente.guidZero];
+      var perfis: string[] = [];
+      if (perfilIds.length) {
+        const consulta: string[] = [];
+        consulta.push(`SELECT DISTINCT nome`);
+        consulta.push(`FROM seguranca.perfil`);
+        consulta.push(`WHERE`);
+        consulta.push(`  (id IN (${perfilIds.map(perfilId => `'${perfilId.trim()}'`).join(', ')}))`);
+        consulta.push(`  AND (remocao IS NULL);`);
+        const usuarioPerfis: { nome: string }[] = await this.leituraRepository.query(consulta.join(' ')) ?? [];
+        perfis = usuarioPerfis.map(perfil => perfil.nome);
+        perfis = perfis.sort();
       }
-      const consulta: string[] = [];
-      consulta.push(`SELECT DISTINCT nome`);
-      consulta.push(`FROM seguranca.perfil`);
-      consulta.push(`WHERE`);
-      consulta.push(`  (id IN (${perfilIds.map(perfilId => `'${perfilId.trim()}'`).join(', ')}))`);
-      consulta.push(`  AND (remocao IS NULL);`);
-      const usuarioPerfis: { nome: string }[] = await this.leituraRepository.query(consulta.join(' ')) ?? [];
-      var perfis = usuarioPerfis.map(perfil => perfil.nome);
-      perfis = perfis.sort();
       if (usuario.super) {
         perfis = ['Sistema'];
       } else if (usuario.administrador) {

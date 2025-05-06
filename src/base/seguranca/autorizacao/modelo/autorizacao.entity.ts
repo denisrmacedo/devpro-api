@@ -47,6 +47,11 @@ export class Autorizacao extends Base {
   @IsOptional()
   @IsString() @Length(20)
   @Column('varchar')
+  nacao: string;
+
+  @IsOptional()
+  @IsString() @Length(20)
+  @Column('varchar')
   horario: string;
 
   @IsNotEmpty()

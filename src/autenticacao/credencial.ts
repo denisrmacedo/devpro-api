@@ -4,5 +4,6 @@ export type Credencial = {
   ip: string;
   aplicativo: number;
   navegador: string;
+  nacao: string;
   horario: string;
 }

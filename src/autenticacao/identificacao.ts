@@ -1,6 +1,7 @@
 export interface Identificacao {
   id: string;
   chave: string;
+  nacao: string;
   horario: string;
   usuario: {
     id: string;
@@ -19,6 +20,7 @@ export interface Identificacao {
 export interface AutorizacaoCompleta {
   id: string;
   chave: string;
+  nacao: string;
   horario: string;
   usuario: {
     id: string;
