@@ -7,7 +7,7 @@ import { TurboModule } from 'src/turbo/turbo.module';
 import { AutenticacaoService } from './autenticacao.service';
 import { AutenticacaoController } from './autenticacao.controller';
 import { UsuarioModule } from 'src/base/administrativo/usuario/usuario.module';
-import { EmpresaModule } from 'src/base/administrativo/empresa/empresa.module';
+import { OrganizacaoModule } from 'src/base/administrativo/organizacao/organizacao.module';
 import { AutorizacaoModule } from 'src/base/seguranca/autorizacao/autorizacao.module';
 
 @Module({
@@ -23,7 +23,7 @@ import { AutorizacaoModule } from 'src/base/seguranca/autorizacao/autorizacao.mo
     }),
     TurboModule,
     UsuarioModule,
-    EmpresaModule,
+    OrganizacaoModule,
     AutorizacaoModule,
   ],
   providers: [

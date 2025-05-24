@@ -27,7 +27,7 @@ export class Auditoria extends Base {
   @IsNotEmpty()
   @IsDateString()
   @Column('timestamptz')
-  momento: Date;
+  instante: Date;
 
   @IsNotEmpty()
   @IsNumber()

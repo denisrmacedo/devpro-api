@@ -45,7 +45,7 @@ export class ArquivoService {
     const recurso = `https://s3.${process.env.AWS_S3_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET}/${nome}`;
     const instrucao: string[] = [];
     instrucao.push(`INSERT INTO integracao.arquivo`);
-    instrucao.push(`  (id, adicao, edicao, versao, "autorizacaoId", "empresaId", provedor, nome, tipo, tamanho, recurso)`);
+    instrucao.push(`  (id, adicao, edicao, versao, "autorizacaoId", "organizacaoId", provedor, nome, tipo, tamanho, recurso)`);
     instrucao.push(`VALUES`);
     instrucao.push(`  (DEFAULT, DEFAULT, DEFAULT, 1, $1, $2, $3, $4, $5, $6, $7);`);
     await this.assistente.gravacao.query(instrucao.join('\n'), [identificacao.id, null, 'AWS', nome, arquivo.mimetype, arquivo.size, recurso]);

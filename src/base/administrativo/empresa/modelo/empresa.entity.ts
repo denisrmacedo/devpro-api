@@ -1,10 +1,10 @@
-import { NaturezaJuridica_ } from './../../../governo/natureza-juridica/modelo/natureza-juridica.entity';
 import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
 import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsObject, IsOptional, Length } from 'class-validator';
 
 import { Base, BaseTabela_ } from 'src/base/base';
 import { Organizacao_ } from 'src/base/administrativo/organizacao/modelo/organizacao.entity';
 import { Cnae_ } from 'src/base/governo/cnae/modelo/cnae.entity';
+import { NaturezaJuridica_ } from './../../../governo/natureza-juridica/modelo/natureza-juridica.entity';
 
 @Entity('administrativo.empresa')
 export class Empresa extends Base {
@@ -57,7 +57,7 @@ export class Empresa extends Base {
   @IsNotEmpty()
   @IsNumber()
   @Column('smallint')
-  inscricao: number;
+  inscricao: EmpresaInscricao;
 
   @IsNotEmpty()
   @IsObject()
@@ -74,7 +74,7 @@ export class Empresa extends Base {
   @IsNotEmpty()
   @IsNumber()
   @Column('smallint')
-  regimeTributario: number;
+  regimeTributario: EmpresaRegimeTributario;
 }
 
 export enum EmpresaSituacao {

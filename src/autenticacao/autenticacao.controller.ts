@@ -18,10 +18,10 @@ export class AutenticacaoController {
     return this.autenticacaoService.conecta(credencial);
   }
 
-  @Post('empresa')
-  conectaEmpresa(@Body() credencial: Credencial, @Ip() ip: string, @Body() empresa: any): Promise<Identificacao> {
+  @Post('organizacao')
+  conectaOrganizacao(@Body() credencial: Credencial, @Ip() ip: string, @Body() organizacao: any): Promise<Identificacao> {
     credencial.ip = ip;
-    return this.autenticacaoService.conectaEmpresa(credencial, empresa);
+    return this.autenticacaoService.conectaOrganizacao(credencial, organizacao);
   }
 
   @Get()

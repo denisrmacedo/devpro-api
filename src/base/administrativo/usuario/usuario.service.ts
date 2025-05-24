@@ -8,8 +8,8 @@ import { AssistenteService, Pagina } from 'src/turbo/assistente.service';
 import { Modelo } from 'src/base/base';
 import { Usuario, UsuarioSituacao } from './modelo/usuario.entity';
 import { UsuarioCredencial } from './modelo/usuario-credencial.entity';
-import { Empresa } from '../empresa/modelo/empresa.entity';
-import { UsuarioEmpresa } from './modelo/usuario-empresa.entity';
+import { Organizacao } from '../organizacao/modelo/organizacao.entity';
+import { UsuarioOrganizacao } from './modelo/usuario-organizacao.entity';
 
 @Injectable()
 export class UsuarioService {
@@ -24,7 +24,7 @@ export class UsuarioService {
   async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<Usuario>> {
     this.assistente.adapta(criterios);
     const options: FindManyOptions<Usuario> = {
-      relations: { usuarioCredenciais: true, usuarioEmpresas: true },
+      relations: { usuarioCredenciais: true, usuarioOrganizacoes: true },
       order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,
       skip: criterios.salto,
@@ -60,15 +60,15 @@ export class UsuarioService {
       }
       delete usuario.usuarioCredenciais;
       var perfis: string[] = [];
-      for (const usuarioEmpresa of usuario.usuarioEmpresas) {
-        if (!usuarioEmpresa.perfilIds?.length) {
+      for (const usuarioOrganizacao of usuario.usuarioOrganizacoes) {
+        if (!usuarioOrganizacao.perfilIds?.length) {
           continue;
         }
         const consulta: string[] = [];
         consulta.push(`SELECT DISTINCT nome`);
         consulta.push(`FROM seguranca.perfil`);
         consulta.push(`WHERE`);
-        consulta.push(`  (id IN (${usuarioEmpresa.perfilIds.map(perfilId => `'${perfilId.trim()}'`).join(', ')}))`);
+        consulta.push(`  (id IN (${usuarioOrganizacao.perfilIds.map(perfilId => `'${perfilId.trim()}'`).join(', ')}))`);
         consulta.push(`  AND (remocao IS NULL)`);
         const usuarioPerfis: { nome: string }[] = await this.leituraRepository.query(consulta.join(' '));
         usuarioPerfis.map(usuarioPerfil => {
@@ -89,7 +89,7 @@ export class UsuarioService {
         perfis = ['Usuários'];
       }
       usuario['perfis'] = perfis;
-      delete usuario.usuarioEmpresas;
+      delete usuario.usuarioOrganizacoes;
     }
     return pagina;
   }
@@ -113,7 +113,7 @@ export class UsuarioService {
     this.assistente.adapta(criterios);
     const options: FindManyOptions<Usuario> = {
       select: { id: true, codigo: true, nome: true, imagem: true, situacao: true },
-      relations: { usuarioCredenciais: true, usuarioEmpresas: true },
+      relations: { usuarioCredenciais: true, usuarioOrganizacoes: true },
       order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,
     };
@@ -132,9 +132,9 @@ export class UsuarioService {
       }
       delete usuario.usuarioCredenciais;
       var perfilIds: string[] = [];
-      for (const usuarioEmpresa of usuario.usuarioEmpresas) {
-        if (usuarioEmpresa.perfilIds?.length) {
-          perfilIds.push(...usuarioEmpresa.perfilIds);
+      for (const usuarioOrganizacao of usuario.usuarioOrganizacoes) {
+        if (usuarioOrganizacao.perfilIds?.length) {
+          perfilIds.push(...usuarioOrganizacao.perfilIds);
         }
       }
       var perfis: string[] = [];
@@ -157,7 +157,7 @@ export class UsuarioService {
         }
       }
       usuario['perfis'] = perfis;
-      delete usuario.usuarioEmpresas;
+      delete usuario.usuarioOrganizacoes;
     }
     return usuarios;
   }
@@ -241,36 +241,36 @@ export class UsuarioService {
     return usuario;
   }
 
-  async editaEmpresa(identificacao: Identificacao, id: string, parametros: { empresa: Empresa, estabelecimentoIds: string[], perfilIds: string[], associa: boolean }): Promise<Usuario> {
+  async editaOrganizacao(identificacao: Identificacao, id: string, parametros: { organizacao: Organizacao, filialIds: string[], perfilIds: string[], associa: boolean }): Promise<Usuario> {
     const usuario = await this.leituraRepository
       .findOneOrFail({
         where: { id },
-        relations: { usuarioEmpresas: { empresa: true } },
+        relations: { usuarioOrganizacoes: { organizacao: true } },
         loadEagerRelations: false,
       });
-    if (!parametros.empresa) {
-      this.assistente.incoerencia('Empresa inválida');
+    if (!parametros.organizacao) {
+      this.assistente.incoerencia('Organizacao inválida');
     }
     if (parametros.associa) {
-      if (!usuario.usuarioEmpresas.find(usuarioEmpresa => usuarioEmpresa.empresa.id === parametros.empresa.id)) {
-        const usuarioEmpresa = new UsuarioEmpresa();
-        usuarioEmpresa.usuario = usuario;
-        usuarioEmpresa.empresa = parametros.empresa;
-        usuarioEmpresa.estabelecimentoIds = parametros.estabelecimentoIds;
-        usuarioEmpresa.perfilIds = parametros.perfilIds;
-        usuarioEmpresa.situacao = 1;
-        this.assistente.gravacao.getRepository(UsuarioEmpresa)
-          .save(usuarioEmpresa);
+      if (!usuario.usuarioOrganizacoes.find(usuarioOrganizacao => usuarioOrganizacao.organizacao.id === parametros.organizacao.id)) {
+        const usuarioOrganizacao = new UsuarioOrganizacao();
+        usuarioOrganizacao.usuario = usuario;
+        usuarioOrganizacao.organizacao = parametros.organizacao;
+        usuarioOrganizacao.filialIds = parametros.filialIds;
+        usuarioOrganizacao.perfilIds = parametros.perfilIds;
+        usuarioOrganizacao.situacao = 1;
+        this.assistente.gravacao.getRepository(UsuarioOrganizacao)
+          .save(usuarioOrganizacao);
       }
       return usuario;
     }
-    this.assistente.gravacao.getRepository(UsuarioEmpresa)
-      .softDelete({ usuario: { id: usuario.id }, empresa: { id: parametros.empresa.id } });
+    this.assistente.gravacao.getRepository(UsuarioOrganizacao)
+      .softDelete({ usuario: { id: usuario.id }, organizacao: { id: parametros.organizacao.id } });
     return usuario;
   }
 
-  async vinculaEmpresa(identificacao: Identificacao, usuario: Usuario, empresa: Empresa): Promise<Usuario> {
-    return this.gravacaoRepository.update({ id: usuario.id }, { empresa: empresa }).then(() => usuario);
+  async vinculaOrganizacao(identificacao: Identificacao, usuario: Usuario, organizacao: Organizacao): Promise<Usuario> {
+    return this.gravacaoRepository.update({ id: usuario.id }, { organizacao: organizacao }).then(() => usuario);
   }
 
   async remove(identificacao: Identificacao, id: string): Promise<Usuario> {

@@ -3,9 +3,9 @@ import { ArrayMinSize, IsArray, IsBoolean, IsNotEmpty, IsNumber, IsObject, IsOpt
 import { Type } from 'class-transformer';
 
 import { Base, BaseTabela_ } from 'src/base/base';
-import { Empresa_ } from '../../empresa/modelo/empresa.entity';
+import { Organizacao_ } from '../../organizacao/modelo/organizacao.entity';
 import { UsuarioCredencial } from './usuario-credencial.entity';
-import { UsuarioEmpresa } from './usuario-empresa.entity';
+import { UsuarioOrganizacao } from './usuario-organizacao.entity';
 
 @Entity('administrativo.usuario')
 export class Usuario extends Base {
@@ -71,9 +71,9 @@ export class Usuario extends Base {
 
   @IsOptional()
   @IsObject()
-  @OneToOne(() => Empresa_, { eager: true })
+  @OneToOne(() => Organizacao_, { eager: true })
   @JoinColumn()
-  empresa: Empresa_;
+  organizacao: Organizacao_;
 
   @IsArray()
   @ArrayMinSize(1)
@@ -88,11 +88,11 @@ export class Usuario extends Base {
   @IsOptional()
   @ArrayMinSize(0)
   @ValidateNested({ each: true })
-  @Type(() => UsuarioEmpresa)
-  @OneToMany(() => UsuarioEmpresa, usuarioEmpresa => usuarioEmpresa.usuario, {
+  @Type(() => UsuarioOrganizacao)
+  @OneToMany(() => UsuarioOrganizacao, usuarioOrganizacao => usuarioOrganizacao.usuario, {
     eager: true, cascade: true, orphanedRowAction: 'soft-delete'
   })
-  usuarioEmpresas: UsuarioEmpresa[];
+  usuarioOrganizacoes: UsuarioOrganizacao[];
 }
 
 export enum UsuarioSituacao {

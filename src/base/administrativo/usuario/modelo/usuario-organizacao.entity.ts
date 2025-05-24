@@ -3,11 +3,11 @@ import { IsArray, IsNotEmpty } from 'class-validator';
 
 import { Base, BaseSituacao } from 'src/base/base';
 import { Usuario } from './usuario.entity';
-import { Empresa_ } from '../../empresa/modelo/empresa.entity';
+import { Organizacao_ } from '../../organizacao/modelo/organizacao.entity';
 
-@Entity('administrativo.usuarioEmpresa')
-export class UsuarioEmpresa extends Base {
-  @ManyToOne(() => Usuario, usuario => usuario.usuarioEmpresas)
+@Entity('administrativo.usuarioOrganizacao')
+export class UsuarioOrganizacao extends Base {
+  @ManyToOne(() => Usuario, usuario => usuario.usuarioOrganizacoes)
   usuario: Usuario;
 
   @IsNotEmpty()
@@ -15,14 +15,14 @@ export class UsuarioEmpresa extends Base {
   situacao: BaseSituacao;
 
   @IsNotEmpty()
-  @OneToOne(() => Empresa_, { eager: true })
+  @OneToOne(() => Organizacao_, { eager: true })
   @JoinColumn()
-  empresa: Empresa_;
+  organizacao: Organizacao_;
 
   @IsNotEmpty()
   @IsArray()
   @Column('uuid', { array: true })
-  estabelecimentoIds: string[];
+  filialIds: string[];
 
   @IsNotEmpty()
   @IsArray()

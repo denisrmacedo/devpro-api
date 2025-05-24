@@ -22,8 +22,8 @@ export class Pagina<T> {
   linhas: T[];
 }
 
-class BaseEmpresa {
-  empresa: { id: string };
+class BaseOrganizacao {
+  organizacao: { id: string };
 }
 
 @Injectable()
@@ -204,7 +204,7 @@ export class AssistenteService {
     return;
   }
 
-  async unicoEmpresa<T>(repository: Repository<T>, empresa: { id: string }, referencia: Record<string, object>, propriedades: Record<string, string>, identificador: Record<string, string> = {}): Promise<void> {
+  async unicoOrganizacao<T>(repository: Repository<T>, organizacao: { id: string }, referencia: Record<string, object>, propriedades: Record<string, string>, identificador: Record<string, string> = {}): Promise<void> {
     if ((Object.keys(referencia).length) !== 1) {
       this.parametroInvalido('referencia');
     }
@@ -238,7 +238,7 @@ export class AssistenteService {
       consulta.push(`SELECT COUNT(*) quantidade`);
       consulta.push(`FROM "${esquema}"."${tabela}"`);
       consulta.push(`WHERE`);
-      consulta.push(`  ("empresaId" = '${empresa.id}')`);
+      consulta.push(`  ("organizacaoId" = '${organizacao.id}')`);
       if (typeof (valor) === 'string') {
         consulta.push(`  AND (versal(${chave}) = versal('${valor}'))`);
       } else {
@@ -307,11 +307,11 @@ export class AssistenteService {
     instancia['codigo'] = sequencia;
   }
 
-  async sequenciaEmpresa<T extends Base>(repository: Repository<T>, instancia: T, empresa: { id: string }, prefixo: string, digitos: number): Promise<void> {
+  async sequenciaOrganizacao<T extends Base>(repository: Repository<T>, instancia: T, organizacao: { id: string }, prefixo: string, digitos: number): Promise<void> {
     if (instancia.id) {
       return;
     }
-    const [{ sequencia }] = await this.gravacao.query(`SELECT sistema."sequenciaEmpresa_nova"('${repository.metadata.tableName}', '${empresa.id}'::uuid , '${prefixo}', ${digitos}, 1) AS sequencia;`);
+    const [{ sequencia }] = await this.gravacao.query(`SELECT sistema."sequenciaOrganizacao_nova"('${repository.metadata.tableName}', '${organizacao.id}'::uuid , '${prefixo}', ${digitos}, 1) AS sequencia;`);
     instancia['codigo'] = sequencia;
   }
 
@@ -319,12 +319,12 @@ export class AssistenteService {
     await this.audita<T>(identificacao, instancia, modelo, Procedimento.Remocao, descricao);
   }
 
-  autoriza(identificacao: Identificacao, referencia: BaseEmpresa | BaseEmpresa[]): void {
+  autoriza(identificacao: Identificacao, referencia: BaseOrganizacao | BaseOrganizacao[]): void {
     if (!(referencia instanceof Array)) {
-      if (!referencia.empresa) {
-        referencia.empresa = identificacao.empresa;
-      } else if (identificacao.empresa.id !== referencia.empresa.id) {
-        this.incoerencia('as informações da empresa divergem da identificação');
+      if (!referencia.organizacao) {
+        referencia.organizacao = identificacao.organizacao;
+      } else if (identificacao.organizacao.id !== referencia.organizacao.id) {
+        this.incoerencia('as informações da organizacao divergem da identificação');
       }
       return;
     }

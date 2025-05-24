@@ -130,7 +130,7 @@ CREATE INDEX auditoria_usuarioId ON seguranca.auditoria("usuarioId");
 CREATE INDEX auditoria_autorizacaoId ON seguranca.auditoria("autorizacaoId");
 CREATE INDEX auditoria_instanciaId ON seguranca.auditoria("instanciaId", versao DESC);
 
-CREATE TABLE administrativo.estabelecimento
+CREATE TABLE administrativo.filial
 (
     id uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
     adicao timestamp (0) with time zone NOT NULL DEFAULT now(),

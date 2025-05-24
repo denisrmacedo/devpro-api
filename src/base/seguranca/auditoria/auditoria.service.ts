@@ -19,7 +19,7 @@ export class AuditoriaService {
   async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<Auditoria>> {
     this.assistente.adapta(criterios);
     const options: FindManyOptions<Auditoria> = {
-      order: { momento: 1 },
+      order: { instante: 1 },
       loadEagerRelations: false,
       skip: criterios.salto,
       take: criterios.linhas,
@@ -55,7 +55,7 @@ export class AuditoriaService {
 
   async busca(identificacao: Identificacao, criterios: any): Promise<Auditoria[]> {
     const options: FindManyOptions<Auditoria> = {
-      order: { momento: 1 },
+      order: { instante: 1 },
     };
     options.where = [];
     if (criterios['usuario.id'])

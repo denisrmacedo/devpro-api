@@ -3,7 +3,7 @@ import { IsDateString, IsIP, IsNotEmpty, IsNumber, IsObject, IsOptional, IsStrin
 
 import { Base, BaseMovimento_ } from 'src/base/base';
 import { Usuario_ } from 'src/base/administrativo/usuario/modelo/usuario.entity';
-import { Empresa_ } from 'src/base/administrativo/empresa/modelo/empresa.entity';
+import { Organizacao_ } from 'src/base/administrativo/organizacao/modelo/organizacao.entity';
 
 @Entity('seguranca.autorizacao')
 export class Autorizacao extends Base {
@@ -25,9 +25,9 @@ export class Autorizacao extends Base {
 
   @IsNotEmpty()
   @IsObject()
-  @OneToOne(() => Empresa_, { eager: true })
+  @OneToOne(() => Organizacao_, { eager: true })
   @JoinColumn()
-  empresa: Empresa_;
+  organizacao: Organizacao_;
 
   @IsNotEmpty()
   @IsIP()

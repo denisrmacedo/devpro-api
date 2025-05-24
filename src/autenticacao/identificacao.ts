@@ -8,7 +8,7 @@ export interface Identificacao {
     nome: string;
     imagem: string;
   },
-  empresa: {
+  organizacao: {
     id: string;
     nome: string;
     imagem: string;
@@ -27,7 +27,7 @@ export interface AutorizacaoCompleta {
     nome: string;
     imagem: string;
   },
-  empresa: {
+  organizacao: {
     id: string;
     nome: string;
     imagem: string;

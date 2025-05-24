@@ -43,8 +43,9 @@ export class BaseMovimento_ {
 
 export enum Modelo {
   Usuario = +'030100',
-  Empresa = +'030200',
-  Estabelecimento = +'030300',
+  Organizacao = +'030200',
+  Empresa = +'030300',
+  Filial = +'030400',
   Cnae = +'040100',
   NaturezaJuridica = +'040200',
   GrupoTributario = +'040300',
