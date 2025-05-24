@@ -28,7 +28,7 @@ export class PerfilService {
     if (criterios.recente) {
       options.order = { edicao: 1 };
     }
-    options.where = [{ empresa: { id: identificacao.empresa.id }}];
+    options.where = [{ organizacao: { id: identificacao.organizacao.id }}];
     if (criterios.situacao) {
       options.where.push({ situacao: criterios.situacao });
     }
@@ -51,7 +51,7 @@ export class PerfilService {
       skip: criterios.salto,
       take: criterios.linhas,
     };
-    options.where = [{ empresa: { id: identificacao.empresa.id }}];
+    options.where = [{ organizacao: { id: identificacao.organizacao.id }}];
     options.where.push({ edicao: MoreThan(criterios.momento) });
     const contagem = await this.gravacaoRepository.count(options);
     return this.leituraRepository.find(options)
@@ -66,8 +66,8 @@ export class PerfilService {
       order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,
     };
-    criterios.empresaId ??= identificacao.empresa.id;
-    options.where = [{ empresa: { id: criterios.empresaId }}];
+    criterios.organizacaoId ??= identificacao.organizacao.id;
+    options.where = [{ organizacao: { id: criterios.organizacaoId }}];
     if (criterios.atuante) {
       options.where.push({ atuante: true });
     }
@@ -78,7 +78,7 @@ export class PerfilService {
     const options: FindManyOptions<Perfil> = {
       order: { situacao: 1, nome: 1 },
     };
-    options.where = [{ empresa: { id: identificacao.empresa.id }}];
+    options.where = [{ organizacao: { id: identificacao.organizacao.id }}];
     if (criterios.administrador === '1') {
       options.where.push({ administrador: true });
     }
@@ -105,7 +105,7 @@ export class PerfilService {
       codigo: 'codigo', nome: 'nome',
     });
     if (!perfil.codigo) {
-      await this.assistente.sequenciaEmpresa(this.gravacaoRepository, perfil, perfil.empresa, '', 3);
+      await this.assistente.sequenciaOrganizacao(this.gravacaoRepository, perfil, perfil.organizacao, '', 3);
     }
     const novo = perfil.novo;
     return this.gravacaoRepository

@@ -17,35 +17,35 @@ export class PerfilRota extends Base {
   @IsNotEmpty()
   @IsNumber()
   @Column('smallint')
-	acessar: number;
+  acessa: number;
 
   @IsNotEmpty()
   @IsNumber()
   @Column('smallint')
-	adicionar: number;
+  adiciona: number;
 
   @IsNotEmpty()
   @IsNumber()
   @Column('smallint')
-	editar: number;
+  edita: number;
 
   @IsNotEmpty()
   @IsNumber()
-  @Column('smallint')@Column()
-	remover: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  @Column('smallint')
-	compartilhar: number;
+  @Column('smallint') @Column()
+  remove: number;
 
   @IsNotEmpty()
   @IsNumber()
   @Column('smallint')
-	aprovar: number;
+  compartilha: number;
 
   @IsNotEmpty()
   @IsNumber()
   @Column('smallint')
-	reverter: number;
+  aprova: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Column('smallint')
+  reverte: number;
 }

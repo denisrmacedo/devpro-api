@@ -2,16 +2,16 @@ import { Entity, Column, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, Length, ValidateNested } from 'class-validator';
 
 import { Base, BaseTabela_ } from 'src/base/base';
-import { Empresa_ } from 'src/base/administrativo/empresa/modelo/empresa.entity';
+import { Organizacao_ } from 'src/base/administrativo/organizacao/modelo/organizacao.entity';
 import { Type } from 'class-transformer';
 import { PerfilRota } from './perfil-rota.entity';
 
 @Entity('seguranca.perfil')
 export class Perfil extends Base {
   @IsNotEmpty()
-  @OneToOne(() => Empresa_)
+  @OneToOne(() => Organizacao_)
   @JoinColumn()
-  empresa: Empresa_;
+  organizacao: Organizacao_;
 
   @IsOptional()
   @IsString() @Length(2, 20)
