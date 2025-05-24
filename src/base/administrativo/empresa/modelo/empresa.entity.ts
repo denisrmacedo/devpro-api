@@ -1,11 +1,19 @@
+import { NaturezaJuridica_ } from './../../../governo/natureza-juridica/modelo/natureza-juridica.entity';
 import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
-import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsObject, IsOptional, IsUrl, Length } from 'class-validator';
+import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsObject, IsOptional, Length } from 'class-validator';
 
 import { Base, BaseTabela_ } from 'src/base/base';
-import { Servidor_ } from 'src/base/sistema/servidor/modelo/servidor.entity';
+import { Organizacao_ } from 'src/base/administrativo/organizacao/modelo/organizacao.entity';
+import { Cnae_ } from 'src/base/governo/cnae/modelo/cnae.entity';
 
 @Entity('administrativo.empresa')
 export class Empresa extends Base {
+  @IsNotEmpty()
+  @IsObject()
+  @OneToOne(() => Organizacao_, { eager: true })
+  @JoinColumn()
+  organizacao: Organizacao_;
+
   @IsOptional()
   @Length(2, 20)
   @Column('varchar')
@@ -15,11 +23,6 @@ export class Empresa extends Base {
   @Length(2, 80)
   @Column('varchar')
   nome: string;
-
-  @IsOptional()
-  @IsUrl() @Length(1, 800)
-  @Column('varchar')
-  imagem: string;
 
   @IsNotEmpty()
   @IsNumber()
@@ -36,57 +39,66 @@ export class Empresa extends Base {
   @Column('varchar', { array: true })
   etiquetas: string[];
 
-  @IsNotEmpty()
-  @IsBoolean()
-  @Column('boolean')
-  super: boolean;
-
-  @IsNotEmpty()
-  @IsNumber()
-  @Column('smallint')
-  atividade: EmpresaAtividade;
-
   @IsOptional()
-  @Length(1, 800)
+  @Length(1, 1000)
   @Column('varchar')
   observacoes: string;
 
   @IsNotEmpty()
+  @Length(2, 100)
+  @Column('varchar')
+  razaoSocial: string;
+
+  @IsNotEmpty()
+  @Length(2, 10)
+  @Column('varchar')
+  cnpj: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Column('smallint')
+  inscricao: number;
+
+  @IsNotEmpty()
   @IsObject()
-  @OneToOne(() => Servidor_, { eager: true })
+  @OneToOne(() => Cnae_, { eager: true })
   @JoinColumn()
-  servidor: Servidor_;
+  cnae: Cnae_;
+
+  @IsNotEmpty()
+  @IsObject()
+  @OneToOne(() => NaturezaJuridica_, { eager: true })
+  @JoinColumn()
+  naturezaJuridica: NaturezaJuridica_;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Column('smallint')
+  regimeTributario: number;
 }
 
 export enum EmpresaSituacao {
   Rascunho = 0,
-  Ativa = 1,
-  Suspensa = 6,
-  Inativa = 9,
+  Ativo = 1,
+  Suspenso = 6,
+  Inativo = 9,
 }
 
-export enum EmpresaAtividade {
-  Geral = 0,
-  Supermercado = 1,
-  Mercearia = 2,
-  Utilidades = 3,
-  Atacado = 4,
-  Varejo = 5,
-  Industria = 6,
-  Tecnologia = 7,
-  Servicos = 8,
-  Saude = 9,
-  Educacao = 10,
-  Alimentacao = 12,
-  Transporte = 14,
-  Construcao = 15,
-  Agricultura = 17,
-  Entretenimento = 18,
-  Governo = 30,
+export enum EmpresaInscricao {
+  Nenhuma = 0,
+  CEI = 1,
+  CNPJ = 2,
+  CPF = 3,
+  INCRA = 4,
+}
+
+export enum EmpresaRegimeTributario {
+  Nenhum = 0,
+  SimplesNacional = 1,
+  LucroReal = 2,
+  LucroPresumido = 3,
+  MEI = 4,
 }
 
 @Entity('administrativo.empresa')
-export class Empresa_ extends BaseTabela_ {
-  @Column()
-  imagem: string;
-}
+export class Empresa_ extends BaseTabela_ { }
