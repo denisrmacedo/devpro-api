@@ -1,8 +1,8 @@
 import { Entity, Column, OneToMany } from 'typeorm';
-import { ArrayMinSize, IsAlpha, IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, Length, ValidateNested } from 'class-validator';
+import { ArrayMinSize, IsAlpha, IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsUppercase, IsUrl, Length, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 
 import { Base, BaseTabela_ } from 'src/base/base';
-import { Type } from 'class-transformer';
 import { Territorio } from '../../territorio/modelo/territorio.entity';
 
 @Entity('geografia.pais')
@@ -63,12 +63,12 @@ export class Pais extends Base {
   continente: string;
 
   @IsNotEmpty()
-  @IsAlpha() @Length(2)
+  @IsAlpha() @Length(2) @IsUppercase()
   @Column('varchar')
   iso2: string;
 
   @IsNotEmpty()
-  @IsAlpha() @Length(2)
+  @IsAlpha() @Length(2) @IsUppercase()
   @Column('varchar')
   iso3: string;
 

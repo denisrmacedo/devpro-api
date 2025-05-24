@@ -8,9 +8,11 @@ import { BaseModule } from './base/base.module';
 import { AutenticacaoModule } from './autenticacao/autenticacao.module';
 import { UsuarioModule } from './base/administrativo/usuario/usuario.module';
 import { EmpresaModule } from './base/administrativo/empresa/empresa.module';
-import { EstabelecimentoModule } from './base/administrativo/estabelecimento/estabelecimento.module';
+import { FilialModule } from './base/administrativo/filial/filial.module';
+import { OrganizacaoModule } from './base/administrativo/organizacao/organizacao.module';
 import { PaisModule } from './base/geografia/pais/pais.module';
 import { TerritorioModule } from './base/geografia/territorio/territorio.module';
+import { DdiModule } from './base/global/ddi/ddi.module';
 import { CnaeModule } from './base/governo/cnae/cnae.module';
 import { NaturezaJuridicaModule } from './base/governo/natureza-juridica/natureza-juridica.module';
 import { GrupoTributarioModule } from './base/governo/grupo-tributario/grupo-tributario.module';
@@ -27,9 +29,11 @@ import { ArquivoModule } from './integracao/arquivo/arquivo.module';
     AutenticacaoModule,
     DashboardModule,
     EmpresaModule,
-    EstabelecimentoModule,
+    FilialModule,
+    OrganizacaoModule,
     PaisModule,
     TerritorioModule,
+    DdiModule,
     CnaeModule,
     NaturezaJuridicaModule,
     GrupoTributarioModule,
