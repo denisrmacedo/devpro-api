@@ -52,6 +52,7 @@ export enum Modelo {
   Pais = +'050100',
   Territorio = +'050200',
   Ddi = +'050300',
+  Regiao = +'060101',
   Perfil = +'020100',
   Servidor = +'010100',
 }
@@ -61,6 +62,7 @@ export enum Modelo {
     Administrativo = 03
     Governo = 04
     Global = 05
+    Nacional = 06
     Seguranca = 02
     Sistema = 01
 */

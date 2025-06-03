@@ -3,8 +3,8 @@ import { IsAlpha, IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString
 
 import { Base, BaseTabela_ } from 'src/base/base';
 
-@Entity('global.ddi')
-export class Ddi extends Base {
+@Entity('nacional.regiao')
+export class Regiao extends Base {
   @IsOptional()
   @IsString() @Length(3)
   @Column('varchar')
@@ -14,6 +14,11 @@ export class Ddi extends Base {
   @IsString() @Length(2, 80)
   @Column('varchar')
   nome: string;
+
+  @IsNotEmpty()
+  @IsString() @Length(1, 2) @IsAlpha()
+  @Column('varchar')
+  sigla: string;
 
   @IsOptional()
   @IsString() @Length(2, 800)
@@ -28,7 +33,7 @@ export class Ddi extends Base {
   @IsNotEmpty()
   @IsNumber()
   @Column('smallint')
-  situacao: DdiSituacao;
+  situacao: RegiaoSituacao;
 
   @IsOptional()
   @IsBoolean()
@@ -44,22 +49,17 @@ export class Ddi extends Base {
   @IsString() @Length(1, 4000)
   @Column('varchar')
   observacoes: string;
-
-  @IsNotEmpty()
-  @IsAlpha() @Length(2) @IsUppercase()
-  @Column('varchar')
-  iso2: string;
 }
 
-export enum DdiSituacao {
+export enum RegiaoSituacao {
   Rascunho = 0,
-  Ativo = 1,
-  Suspenso = 6,
-  Inativo = 9,
+  Ativa = 1,
+  Suspensa = 6,
+  Inativa = 9,
 }
 
-@Entity('global.ddi')
-export class Ddi_ extends BaseTabela_ {
+@Entity('global.regiao')
+export class Regiao_ extends BaseTabela_ {
   @Column()
   imagem: string;
 }

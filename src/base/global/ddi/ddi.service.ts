@@ -137,14 +137,14 @@ export class DdiService {
   async salva(identificacao: Identificacao, ddi: Ddi): Promise<Ddi> {
     ddi.atuante = ddi.situacao === DdiSituacao.Ativo;
     await this.assistente.unico(this.gravacaoRepository, { ddi }, {
-      codigo: 'código', nome: 'nome', iso2: 'iso2', iso3: 'iso3', tld: 'tld'
+      codigo: 'código', nome: 'nome', iso2: 'iso2'
     });
     const novo = ddi.novo;
     return this.gravacaoRepository
       .save(ddi)
       .then(async ddi => {
         await this.assistente.cache.set(ddi.id, ddi);
-        await this.assistente.audita(identificacao, ddi, Modelo.Ddi, novo, 'País: ' + ddi.nome);
+        await this.assistente.audita(identificacao, ddi, Modelo.Ddi, novo, 'Ddi: ' + ddi.nome);
         return ddi;
       });
   }
@@ -155,7 +155,7 @@ export class DdiService {
       .softRemove(ddi)
       .then(async ddi => {
         await this.assistente.cache.del(ddi.id);
-        await this.assistente.auditaExclusao(identificacao, ddi, Modelo.Ddi, 'País: ' + ddi.nome);
+        await this.assistente.auditaExclusao(identificacao, ddi, Modelo.Ddi, 'Ddi: ' + ddi.nome);
         return ddi;
       })
   }
