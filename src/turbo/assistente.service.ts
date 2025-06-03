@@ -190,10 +190,10 @@ export class AssistenteService {
       if (typeof (valor) === 'string') {
         consulta.push(`  (versal(${chave}) = versal('${valor}'))`);
       } else {
-        consulta.push(`  (${chave} = ${valor})`);
+        consulta.push(`  ("${chave}" = ${valor})`);
       }
       for (const chave in identificador) {
-        consulta.push(`  AND (${chave} <> '${identificador[chave] || this._guidZero}')`);
+        consulta.push(`  AND ("${chave}" <> '${identificador[chave] || this._guidZero}')`);
       }
       consulta.push(`  AND (remocao IS NULL);`);
       const [{ quantidade }] = await repository.query(consulta.join('\n'));
@@ -242,10 +242,10 @@ export class AssistenteService {
       if (typeof (valor) === 'string') {
         consulta.push(`  AND (versal(${chave}) = versal('${valor}'))`);
       } else {
-        consulta.push(`  AND (${chave} = ${valor})`);
+        consulta.push(`  AND ("${chave}" = ${valor})`);
       }
       for (const chave in identificador) {
-        consulta.push(`  AND (${chave} <> '${identificador[chave] || this._guidZero}')`);
+        consulta.push(`  AND ("${chave}" <> '${identificador[chave] || this._guidZero}')`);
       }
       consulta.push(`  AND (remocao IS NULL);`);
       const [{ quantidade }] = await repository.query(consulta.join('\n'));
@@ -293,7 +293,7 @@ export class AssistenteService {
     }
     const consulta: string[] = [];
     consulta.push(`INSERT INTO seguranca.auditoria`);
-    consulta.push(`  (id, adicao, edicao, versao, "usuarioId", "autorizacaoId", horario, momento, procedimento, instancia, "instanciaId", "instanciaModelo", "instanciaDescricao")`);
+    consulta.push(`  (id, adicao, edicao, versao, "usuarioId", "autorizacaoId", horario, instante, procedimento, instancia, "instanciaId", "instanciaModelo", "instanciaDescricao")`);
     consulta.push(`VALUES`);
     consulta.push(`  (default, default, default, 1, '${identificacao.usuario.id}', '${identificacao.id}', '${identificacao.horario || 'UTC+0'}', now(), ${procedimento}, '${JSON.stringify(instancia)}', '${instancia.id}', '${modelo}', '${descricao}');`);
     await this.gravacao.query(consulta.join('\n'));

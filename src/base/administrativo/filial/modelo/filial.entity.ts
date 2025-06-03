@@ -61,12 +61,12 @@ export class Filial extends Base {
   @IsNotEmpty()
   @IsNumber()
   @Column('smallint')
-  produtorRural: FilialProdutorRural;
+  contribuinte: FilialContribuinte;
 
   @IsNotEmpty()
   @IsNumber()
   @Column('smallint')
-  contribuinte: FilialContribuinte;
+  produtorRural: FilialProdutorRural;
 
   @IsNotEmpty()
   @IsBoolean()
@@ -76,7 +76,7 @@ export class Filial extends Base {
   @IsNotEmpty()
   @IsBoolean()
   @Column('boolean')
-  lojistica: boolean;
+  logistica: boolean;
 
   @IsNotEmpty()
   @IsBoolean()
@@ -111,9 +111,9 @@ export class Filial extends Base {
 
 export enum FilialSituacao {
   Rascunho = 0,
-  Ativo = 1,
-  Suspenso = 6,
-  Inativo = 9,
+  Ativa = 1,
+  Suspensa = 6,
+  Inativa = 9,
 }
 
 export enum FilialProdutorRural {

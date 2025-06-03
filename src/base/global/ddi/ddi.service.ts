@@ -87,15 +87,30 @@ export class DdiService {
 
   async lista(identificacao: Identificacao, criterios: any): Promise<Ddi[]> {
     this.assistente.adapta(criterios);
-    const query = this.leituraRepository
-      .createQueryBuilder('ddi')
-      .select(['id', 'codigo', 'nome', 'imagem', 'situacao'])
-      .orderBy(`(iso2 <> '${identificacao.nacao}')::int`)
-      .addOrderBy('ddi.nome');
+    // const query = this.leituraRepository
+    //   .createQueryBuilder('ddi')
+    //   .select(['id', 'codigo', 'nome', 'imagem', 'situacao'])
+    //   .orderBy(`(iso2 <> '${identificacao.nacao}')::int`)
+    //   .addOrderBy('ddi.nome');
+    // if (criterios.atuante) {
+    //   query.andWhere({ atuante: true });
+    // }
+    // const lista = await query.getMany();
+    // return lista;
+    //return await query.getMany();
+    const query: string[] = [];
+    query.push('SELECT id, codigo, nome, imagem, situacao');
+    query.push('FROM global.ddi');
+    query.push('WHERE');
+    query.push('  (remocao IS NULL)');
     if (criterios.atuante) {
-      query.andWhere({ atuante: true });
+      query.push('  AND (atuante)');
     }
-    return query.getMany();
+    query.push('ORDER BY');
+    query.push(`  (iso2 <> '${identificacao.nacao}')::int ASC,`);
+    query.push('  situacao ASC,');
+    query.push('  nome ASC');
+    return this.leituraRepository.query(query.join('\n'));
   }
 
   async busca(identificacao: Identificacao, criterios: any): Promise<Ddi[]> {

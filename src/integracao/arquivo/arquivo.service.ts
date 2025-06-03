@@ -21,18 +21,18 @@ export class ArquivoService {
 
   async grava(identificacao: Identificacao, arquivo: Express.MulterS3.File) {
     const idu = (): string => {
-      const uuid = randomUUID()
-      const table = 'BCDFGHJKLMNPQRSTVWXYZ0123456789'
-      const base = table.length
-      const hex = uuid.replace(/-/g, '')
-      const bigIntValue = BigInt('0x' + hex)
-      var result = ''
-      var value = bigIntValue
+      const uuid = randomUUID();
+      const table = 'BCDFGHJKLMNPQRSTVWXYZ0123456789';
+      const base = table.length;
+      const hex = uuid.replace(/-/g, '');
+      const bigIntValue = BigInt('0x' + hex);
+      var result = '';
+      var value = bigIntValue;
       while (value > 0n) {
-        result = table[Number(value % BigInt(base))] + result
-        value /= BigInt(base)
+        result = table[Number(value % BigInt(base))] + result;
+        value /= BigInt(base);
       }
-      return result.padStart(26, '0')
+      return result.padStart(26, '0').toLocaleLowerCase();
     }
     const nome = `${idu()}.${arquivo.originalname.split('.').pop()}`;
     const params = {

@@ -51,12 +51,32 @@ export class OrganizacaoService {
       consulta.push(`  codigo,`);
       consulta.push(`  nome,`);
       consulta.push(`  situacao`);
+      consulta.push(`FROM administrativo.empresa`);
+      consulta.push(`WHERE`);
+      consulta.push(`  ("organizacaoId" IN (${parametros}))`);
+      consulta.push(`  AND (remocao IS NULL)`);
+      consulta.push(`ORDER BY`);
+      consulta.push(`  "organizacaoId",`);
+      consulta.push(`  situacao,`);
+      consulta.push(`  nome;`);
+      const empresas:
+        { organizacaoId: string, id: string, codigo: string, nome: string, situacao: number }[]
+        = await this.assistente.leitura.query(consulta.join('\n'), ids);
+      consulta.length = 0;
+      consulta.push(`SELECT`);
+      consulta.push(`  "organizacaoId",`);
+      consulta.push(`  id,`);
+      consulta.push(`  codigo,`);
+      consulta.push(`  nome,`);
+      consulta.push(`  situacao`);
       consulta.push(`FROM administrativo.filial`);
       consulta.push(`WHERE`);
       consulta.push(`  ("organizacaoId" IN (${parametros}))`);
       consulta.push(`  AND (remocao IS NULL)`);
       consulta.push(`ORDER BY`);
       consulta.push(`  "organizacaoId",`);
+      consulta.push(`  situacao,`);
+      consulta.push(`  super DESC,`);
       consulta.push(`  nome;`);
       const filiais:
         { organizacaoId: string, id: string, codigo: string, nome: string, situacao: number, imagens: string[] }[]
@@ -75,13 +95,15 @@ export class OrganizacaoService {
       consulta.push(`  AND (remocao IS NULL)`);
       consulta.push(`ORDER BY`);
       consulta.push(`  "organizacaoId",`);
+      consulta.push(`  situacao,`);
+      consulta.push(`  administrador DESC,`);
       consulta.push(`  nome;`);
       const perfis:
         { organizacaoId: string, id: string, codigo: string, nome: string, situacao: number, imagens: string[] }[]
         = await this.assistente.leitura.query(consulta.join('\n'), ids);
       consulta.length = 0;
       consulta.push(`SELECT`);
-      consulta.push(`  "usuarioOrganizacaorganizacaoIdizacaoId",`);
+      consulta.push(`  "usuarioOrganizacao"."organizacaoId",`);
       consulta.push(`  usuario.id,`);
       consulta.push(`  usuario.codigo,`);
       consulta.push(`  usuario.nome,`);
@@ -93,11 +115,12 @@ export class OrganizacaoService {
       consulta.push(`  administrativo."usuarioOrganizacao"`);
       consulta.push(`  JOIN administrativo.usuario ON (usuario.id = "usuarioOrganizacao"."usuarioId")`);
       consulta.push(`WHERE`);
-      consulta.push(`  ("usuarioOrganizacaorganizacaoIdizacaoId" IN (${parametros}))`);
+      consulta.push(`  ("usuarioOrganizacao"."organizacaoId" IN (${parametros}))`);
       consulta.push(`  AND ("usuarioOrganizacao".remocao IS NULL)`);
       consulta.push(`  AND (usuario.remocao IS NULL)`);
       consulta.push(`ORDER BY`);
-      consulta.push(`  "usuarioOrganizacaorganizacaoIdizacaoId",`);
+      consulta.push(`  "usuarioOrganizacao"."organizacaoId",`);
+      consulta.push(`  usuario.situacao,`);
       consulta.push(`  usuario.nome;`);
       const usuarios:
         { organizacaoId: string, id: string, codigo: string, nome: string, imagem: string, situacao: number, filialIds: string[], perfilIds: string[]}[]
@@ -131,6 +154,12 @@ export class OrganizacaoService {
         });
       }
       for (const organizacao of organizacoes) {
+        organizacao['empresas'] = empresas
+          .filter(empresa => empresa.organizacaoId === organizacao.id)
+          .map(empresa => {
+            delete empresa.organizacaoId;
+            return empresa;
+          });
         organizacao['filiais'] = filiais
           .filter(filial => filial.organizacaoId === organizacao.id)
           .map(filial => {

@@ -60,4 +60,7 @@ export enum DdiSituacao {
 }
 
 @Entity('global.ddi')
-export class Ddi_ extends BaseTabela_ { }
+export class Ddi_ extends BaseTabela_ {
+  @Column()
+  imagem: string;
+}

@@ -63,14 +63,14 @@ export class Organizacao extends Base {
   @IsNotEmpty()
   @IsObject()
   @Type(() => OrganizacaoResponsavel)
-  @OneToOne(() => OrganizacaoResponsavel, organizacaoResponsavel => organizacaoResponsavel.id, { eager: true })
+  @OneToOne(() => OrganizacaoResponsavel, organizacaoResponsavel => organizacaoResponsavel.id, { eager: true, cascade: true })
   @JoinColumn()
   organizacaoResponsavel: OrganizacaoResponsavel;
 
   @IsNotEmpty()
   @IsObject()
   @Type(() => OrganizacaoCompartilhamento)
-  @OneToOne(() => OrganizacaoCompartilhamento, organizacaoCompartilhamento => organizacaoCompartilhamento.id, { eager: true })
+  @OneToOne(() => OrganizacaoCompartilhamento, organizacaoCompartilhamento => organizacaoCompartilhamento.id, { eager: true, cascade: true })
   @JoinColumn()
   organizacaoCompartilhamento: OrganizacaoCompartilhamento;
 }

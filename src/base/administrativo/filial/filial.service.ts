@@ -103,7 +103,7 @@ export class FilialService {
     });
   }
   async salva(identificacao: Identificacao, filial: Filial): Promise<Filial> {
-    filial.atuante = filial.situacao === FilialSituacao.Ativo;
+    filial.atuante = filial.situacao === FilialSituacao.Ativa;
     await this.assistente.unicoOrganizacao(this.gravacaoRepository, identificacao.organizacao, { filial }, {
       codigo: 'código', nome: 'nome',
     });

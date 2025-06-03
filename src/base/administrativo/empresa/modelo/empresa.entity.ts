@@ -39,6 +39,11 @@ export class Empresa extends Base {
   @Column('varchar', { array: true })
   etiquetas: string[];
 
+  @IsNotEmpty()
+  @IsBoolean()
+  @Column('boolean')
+  super: boolean;
+
   @IsOptional()
   @Length(1, 1000)
   @Column('varchar')
@@ -50,7 +55,7 @@ export class Empresa extends Base {
   razaoSocial: string;
 
   @IsNotEmpty()
-  @Length(2, 10)
+  @Length(2, 20)
   @Column('varchar')
   cnpj: string;
 

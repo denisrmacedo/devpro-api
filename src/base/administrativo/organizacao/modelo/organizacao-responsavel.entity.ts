@@ -22,6 +22,12 @@ export class OrganizacaoResponsavel extends Base {
   email: string;
 
   @IsNotEmpty()
+  @IsObject()
+  @OneToOne(() => Ddi_, { eager: true })
+  @JoinColumn()
+  ddi: Ddi_;
+
+  @IsNotEmpty()
   @Length(1, 50)
   @Column('varchar')
   telefone: string;
@@ -30,10 +36,4 @@ export class OrganizacaoResponsavel extends Base {
   @Length(1, 50)
   @Column('varchar')
   telefoneRamal: string;
-
-  @IsNotEmpty()
-  @IsObject()
-  @OneToOne(() => Ddi_, { eager: true })
-  @JoinColumn()
-  telefoneDdi: Ddi_;
 }

@@ -62,7 +62,7 @@ export class NaturezaJuridicaService {
     this.assistente.adapta(criterios);
     const options: FindManyOptions<NaturezaJuridica> = {
       select: { id: true, codigo: true, nome: true, situacao: true },
-      order: { situacao: 1, nivel: 1 },
+      order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,
     };
     if (criterios.atuante) {
