@@ -52,7 +52,8 @@ export enum Modelo {
   Pais = +'050100',
   Territorio = +'050200',
   Ddi = +'050300',
-  Regiao = +'060101',
+  Regiao = +'060100',
+  Uf = +'060200',
   Perfil = +'020100',
   Servidor = +'010100',
 }

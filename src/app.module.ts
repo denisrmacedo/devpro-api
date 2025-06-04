@@ -14,6 +14,7 @@ import { PaisModule } from './base/geografia/pais/pais.module';
 import { TerritorioModule } from './base/geografia/territorio/territorio.module';
 import { DdiModule } from './base/global/ddi/ddi.module';
 import { RegiaoModule } from './base/nacional/regiao/regiao.module';
+import { UfModule } from './base/nacional/uf/uf.module';
 import { CnaeModule } from './base/governo/cnae/cnae.module';
 import { NaturezaJuridicaModule } from './base/governo/natureza-juridica/natureza-juridica.module';
 import { GrupoTributarioModule } from './base/governo/grupo-tributario/grupo-tributario.module';
@@ -36,6 +37,7 @@ import { ArquivoModule } from './integracao/arquivo/arquivo.module';
     TerritorioModule,
     DdiModule,
     RegiaoModule,
+    UfModule,
     CnaeModule,
     NaturezaJuridicaModule,
     GrupoTributarioModule,

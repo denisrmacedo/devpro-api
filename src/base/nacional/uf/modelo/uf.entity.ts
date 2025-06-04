@@ -1,10 +1,11 @@
-import { Entity, Column } from 'typeorm';
-import { IsAlpha, IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsUppercase, IsUrl, Length } from 'class-validator';
+import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
+import { IsAlpha, IsArray, IsBoolean, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, IsUppercase, IsUrl, Length } from 'class-validator';
 
 import { Base, BaseTabela_ } from 'src/base/base';
+import { Regiao_ } from '../../regiao/modelo/regiao.entity';
 
-@Entity('nacional.regiao')
-export class Regiao extends Base {
+@Entity('nacional.uf')
+export class Uf extends Base {
   @IsOptional()
   @IsString() @Length(3)
   @Column('varchar')
@@ -16,7 +17,7 @@ export class Regiao extends Base {
   nome: string;
 
   @IsNotEmpty()
-  @IsString() @Length(1, 2) @IsUppercase() @IsAlpha()
+  @IsString() @Length(2, 2) @IsUppercase() @IsAlpha()
   @Column('varchar')
   sigla: string;
 
@@ -33,7 +34,7 @@ export class Regiao extends Base {
   @IsNotEmpty()
   @IsNumber()
   @Column('smallint')
-  situacao: RegiaoSituacao;
+  situacao: UfSituacao;
 
   @IsOptional()
   @IsBoolean()
@@ -49,17 +50,23 @@ export class Regiao extends Base {
   @IsString() @Length(1, 4000)
   @Column('varchar')
   observacoes: string;
+
+  @IsNotEmpty()
+  @IsObject()
+  @OneToOne(() => Regiao_, { eager: true })
+  @JoinColumn()
+  regiao: Regiao_;
 }
 
-export enum RegiaoSituacao {
+export enum UfSituacao {
   Rascunho = 0,
   Ativa = 1,
   Suspensa = 6,
   Inativa = 9,
 }
 
-@Entity('nacional.regiao')
-export class Regiao_ extends BaseTabela_ {
+@Entity('nacional.uf')
+export class Uf_ extends BaseTabela_ {
   @Column()
   imagem: string;
 }
