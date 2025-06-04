@@ -34,7 +34,7 @@ export class RegiaoImediataService {
       options.where.situacao = criterios.situacao;
     }
     if (criterios.codigo) {
-      options.where.codigo = Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.codigo });
+      options.where.codigo = Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.codigo });
     }
     if (criterios.nome) {
       options.where.nome = Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome });
@@ -43,19 +43,19 @@ export class RegiaoImediataService {
       options.where.regiao = { id: criterios.regiaoId };
     }
     if (criterios.regiaoCodigo) {
-      options.where.regiao = { codigo: Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.regiaoCodigo }) };
+      options.where.regiao = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.regiaoCodigo }) };
     }
     if (criterios.ufId) {
       options.where.uf = { id: criterios.ufId };
     }
     if (criterios.ufCodigo) {
-      options.where.uf = { codigo: Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.ufCodigo }) };
+      options.where.uf = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.ufCodigo }) };
     }
     if (criterios.regiaoIntermediariaId) {
       options.where.regiaoIntermediaria = { id: criterios.regiaoIntermediariaId };
     }
     if (criterios.regiaoIntermediariaCodigo) {
-      options.where.regiaoIntermediaria = { codigo: Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.regiaoIntermediariaCodigo }) };
+      options.where.regiaoIntermediaria = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.regiaoIntermediariaCodigo }) };
     }
     const contagem = await this.leituraRepository.count(options);
     return this.leituraRepository.find(options)
@@ -97,19 +97,19 @@ export class RegiaoImediataService {
       options.where.regiao = { id: criterios.regiaoId };
     }
     if (criterios.regiaoCodigo) {
-      options.where.regiao = { codigo: Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.regiaoCodigo }) };
+      options.where.regiao = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.regiaoCodigo }) };
     }
     if (criterios.ufId) {
       options.where.uf = { id: criterios.ufId };
     }
     if (criterios.ufCodigo) {
-      options.where.uf = { codigo: Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.ufCodigo }) };
+      options.where.uf = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.ufCodigo }) };
     }
     if (criterios.regiaoIntermediariaId) {
       options.where.regiaoIntermediaria = { id: criterios.regiaoIntermediariaId };
     }
     if (criterios.regiaoIntermediariaCodigo) {
-      options.where.regiaoIntermediaria = { codigo: Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.regiaoIntermediariaCodigo }) };
+      options.where.regiaoIntermediaria = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.regiaoIntermediariaCodigo }) };
     }
     return this.leituraRepository.find(options);
   }

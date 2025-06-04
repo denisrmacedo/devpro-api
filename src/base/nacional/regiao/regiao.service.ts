@@ -33,7 +33,7 @@ export class RegiaoService {
       options.where.situacao = criterios.situacao;
     }
     if (criterios.codigo) {
-      options.where.codigo = Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.codigo });
+      options.where.codigo = Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.codigo });
     }
     if (criterios.nome) {
       options.where.nome = Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome });

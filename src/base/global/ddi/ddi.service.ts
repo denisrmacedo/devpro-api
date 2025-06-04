@@ -33,7 +33,7 @@ export class DdiService {
       options.where.push({ situacao: criterios.situacao });
     }
     if (criterios.codigo) {
-      options.where.push({ codigo: Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.codigo }) });
+      options.where.push({ codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.codigo }) });
     }
     if (criterios.nome) {
       options.where.push({ nome: Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome }) });
@@ -49,7 +49,7 @@ export class DdiService {
       query.andWhere({ situacao: criterios.situacao });
     }
     if (criterios.codigo) {
-      query.andWhere({ codigo: Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.codigo }) });
+      query.andWhere({ codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.codigo }) });
     }
     if (criterios.nome) {
       query.andWhere({ nome: Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome }) });
