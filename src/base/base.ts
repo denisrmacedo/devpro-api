@@ -1,3 +1,4 @@
+import { Mesorregiao } from './nacional/mesorregiao/modelo/mesorregiao.entity';
 import { NaturezaJuridica } from './governo/natureza-juridica/modelo/natureza-juridica.entity';
 import { Column, CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
 
@@ -54,6 +55,7 @@ export enum Modelo {
   Ddi = +'050300',
   Regiao = +'060100',
   Uf = +'060200',
+  Mesorregiao = +'060300',
   Perfil = +'020100',
   Servidor = +'010100',
 }

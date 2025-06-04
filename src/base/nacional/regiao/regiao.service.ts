@@ -28,15 +28,15 @@ export class RegiaoService {
     if (criterios.recente) {
       options.order = { edicao: 1 };
     }
-    options.where = [];
+    options.where = {};
     if (criterios.situacao) {
-      options.where.push({ situacao: criterios.situacao });
+      options.where.situacao = criterios.situacao;
     }
     if (criterios.codigo) {
-      options.where.push({ codigo: Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.codigo }) });
+      options.where.codigo = Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.codigo });
     }
     if (criterios.nome) {
-      options.where.push({ nome: Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome }) });
+      options.where.nome = Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome });
     }
     const contagem = await this.leituraRepository.count(options);
     return this.leituraRepository.find(options)
@@ -67,12 +67,12 @@ export class RegiaoService {
       order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,
     };
-    options.where = [];
+    options.where = {};
     if (criterios.situacao) {
-      options.where.push({ situacao: criterios.situacao });
+      options.where.situacao = criterios.situacao;
     }
     if (criterios.nome) {
-      options.where.push({ nome: Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome }) });
+      options.where.nome = Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome });
     }
     return this.leituraRepository.find(options);
   }
