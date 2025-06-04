@@ -5,21 +5,21 @@ import { Repository, MoreThan, FindManyOptions, Raw } from 'typeorm';
 import { Identificacao } from 'src/autenticacao/identificacao';
 import { AssistenteService, Pagina } from 'src/turbo/assistente.service';
 import { Modelo } from 'src/base/base';
-import { Mesorregiao, MesorregiaoSituacao } from './modelo/mesorregiao.entity';
+import { Microrregiao, MicrorregiaoSituacao } from './modelo/microrregiao.entity';
 
 @Injectable()
-export class MesorregiaoService {
+export class MicrorregiaoService {
   constructor(
-    @InjectRepository(Mesorregiao, 'gravacao')
-    private readonly gravacaoRepository: Repository<Mesorregiao>,
-    @InjectRepository(Mesorregiao, 'leitura')
-    private readonly leituraRepository: Repository<Mesorregiao>,
+    @InjectRepository(Microrregiao, 'gravacao')
+    private readonly gravacaoRepository: Repository<Microrregiao>,
+    @InjectRepository(Microrregiao, 'leitura')
+    private readonly leituraRepository: Repository<Microrregiao>,
     private readonly assistente: AssistenteService,
   ) { }
 
-  async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<Mesorregiao>> {
+  async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<Microrregiao>> {
     this.assistente.adapta(criterios);
-    const options: FindManyOptions<Mesorregiao> = {
+    const options: FindManyOptions<Microrregiao> = {
       order: { situacao: 1, nome: 1 },
       relations: ['regiao', 'uf'],
       loadEagerRelations: false,
@@ -51,6 +51,12 @@ export class MesorregiaoService {
     if (criterios.ufCodigo) {
       options.where.uf = { codigo: Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.ufCodigo }) };
     }
+    if (criterios.mesorregiaoId) {
+      options.where.mesorregiao = { id: criterios.mesorregiaoId };
+    }
+    if (criterios.mesorregiaoCodigo) {
+      options.where.mesorregiao = { codigo: Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.mesorregiaoCodigo }) };
+    }
     const contagem = await this.leituraRepository.count(options);
     return this.leituraRepository.find(options)
       .then(
@@ -58,9 +64,9 @@ export class MesorregiaoService {
       );
   }
 
-  async sincroniza(identificacao: Identificacao, criterios: any): Promise<Pagina<Mesorregiao>> {
+  async sincroniza(identificacao: Identificacao, criterios: any): Promise<Pagina<Microrregiao>> {
     this.assistente.adapta(criterios, { sincronizacao: true });
-    const options: FindManyOptions<Mesorregiao> = {
+    const options: FindManyOptions<Microrregiao> = {
       where: { edicao: MoreThan(criterios.momento) },
       order: { edicao: 1 },
       skip: criterios.salto,
@@ -73,9 +79,9 @@ export class MesorregiaoService {
       );
   }
 
-  async lista(identificacao: Identificacao, criterios: any): Promise<Mesorregiao[]> {
+  async lista(identificacao: Identificacao, criterios: any): Promise<Microrregiao[]> {
     this.assistente.adapta(criterios);
-    const options: FindManyOptions<Mesorregiao> = {
+    const options: FindManyOptions<Microrregiao> = {
       select: { id: true, codigo: true, nome: true, imagem: true, situacao: true },
       order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,
@@ -99,53 +105,59 @@ export class MesorregiaoService {
     if (criterios.ufCodigo) {
       options.where.uf = { codigo: Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.ufCodigo }) };
     }
+    if (criterios.mesorregiaoId) {
+      options.where.mesorregiao = { id: criterios.mesorregiaoId };
+    }
+    if (criterios.mesorregiaoCodigo) {
+      options.where.mesorregiao = { codigo: Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.mesorregiaoCodigo }) };
+    }
     return this.leituraRepository.find(options);
   }
 
-  async busca(identificacao: Identificacao, criterios: any): Promise<Mesorregiao[]> {
-    const options: FindManyOptions<Mesorregiao> = {
+  async busca(identificacao: Identificacao, criterios: any): Promise<Microrregiao[]> {
+    const options: FindManyOptions<Microrregiao> = {
       order: { situacao: 1, nome: 1 },
     };
     options.where = [];
     return this.leituraRepository.find(options);
   }
 
-  async capta(identificacao: Identificacao, id: string): Promise<Mesorregiao> {
-    const mesorregiao = await this.assistente.cache.get<Mesorregiao>(id);
-    if (mesorregiao) {
-      return mesorregiao;
+  async capta(identificacao: Identificacao, id: string): Promise<Microrregiao> {
+    const microrregiao = await this.assistente.cache.get<Microrregiao>(id);
+    if (microrregiao) {
+      return microrregiao;
     }
     return this.gravacaoRepository.findOneOrFail({
       where: { id },
       loadEagerRelations: true,
-    }).then(mesorregiao => {
-      this.assistente.cache.set(mesorregiao.id, mesorregiao);
-      return mesorregiao;
+    }).then(microrregiao => {
+      this.assistente.cache.set(microrregiao.id, microrregiao);
+      return microrregiao;
     });
   }
-  async salva(identificacao: Identificacao, mesorregiao: Mesorregiao): Promise<Mesorregiao> {
-    mesorregiao.atuante = mesorregiao.situacao === MesorregiaoSituacao.Ativa;
-    await this.assistente.unico(this.gravacaoRepository, { mesorregiao }, {
+  async salva(identificacao: Identificacao, microrregiao: Microrregiao): Promise<Microrregiao> {
+    microrregiao.atuante = microrregiao.situacao === MicrorregiaoSituacao.Ativa;
+    await this.assistente.unico(this.gravacaoRepository, { microrregiao }, {
       codigo: 'código', nome: 'nome'
     });
-    const novo = mesorregiao.novo;
+    const novo = microrregiao.novo;
     return this.gravacaoRepository
-      .save(mesorregiao)
-      .then(async mesorregiao => {
-        await this.assistente.cache.set(mesorregiao.id, mesorregiao);
-        await this.assistente.audita(identificacao, mesorregiao, Modelo.Mesorregiao, novo, 'Mesorregião: ' + mesorregiao.nome);
-        return mesorregiao;
+      .save(microrregiao)
+      .then(async microrregiao => {
+        await this.assistente.cache.set(microrregiao.id, microrregiao);
+        await this.assistente.audita(identificacao, microrregiao, Modelo.Microrregiao, novo, 'Mesorregião: ' + microrregiao.nome);
+        return microrregiao;
       });
   }
 
-  async remove(identificacao: Identificacao, id: string): Promise<Mesorregiao> {
-    const mesorregiao = await this.capta(identificacao, id);
+  async remove(identificacao: Identificacao, id: string): Promise<Microrregiao> {
+    const microrregiao = await this.capta(identificacao, id);
     return await this.gravacaoRepository
-      .softRemove(mesorregiao)
-      .then(async mesorregiao => {
-        await this.assistente.cache.del(mesorregiao.id);
-        await this.assistente.auditaExclusao(identificacao, mesorregiao, Modelo.Mesorregiao, 'Mesorregião: ' + mesorregiao.nome);
-        return mesorregiao;
+      .softRemove(microrregiao)
+      .then(async microrregiao => {
+        await this.assistente.cache.del(microrregiao.id);
+        await this.assistente.auditaExclusao(identificacao, microrregiao, Modelo.Microrregiao, 'Mesorregião: ' + microrregiao.nome);
+        return microrregiao;
       })
   }
 }

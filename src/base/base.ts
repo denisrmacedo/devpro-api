@@ -56,6 +56,7 @@ export enum Modelo {
   Regiao = +'060100',
   Uf = +'060200',
   Mesorregiao = +'060300',
+  Microrregiao = +'060400',
   Perfil = +'020100',
   Servidor = +'010100',
 }
