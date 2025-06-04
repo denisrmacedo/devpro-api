@@ -17,6 +17,7 @@ import { RegiaoModule } from './base/nacional/regiao/regiao.module';
 import { UfModule } from './base/nacional/uf/uf.module';
 import { MesorregiaoModule } from './base/nacional/mesorregiao/mesorregiao.module';
 import { MicrorregiaoModule } from './base/nacional/microrregiao/microrregiao.module';
+import { RegiaoIntermediariaModule } from './base/nacional/regiao-intermediaria/regiao-intermediaria.module';
 import { CnaeModule } from './base/governo/cnae/cnae.module';
 import { NaturezaJuridicaModule } from './base/governo/natureza-juridica/natureza-juridica.module';
 import { GrupoTributarioModule } from './base/governo/grupo-tributario/grupo-tributario.module';
@@ -42,6 +43,7 @@ import { ArquivoModule } from './integracao/arquivo/arquivo.module';
     UfModule,
     MesorregiaoModule,
     MicrorregiaoModule,
+    RegiaoIntermediariaModule,
     CnaeModule,
     NaturezaJuridicaModule,
     GrupoTributarioModule,
