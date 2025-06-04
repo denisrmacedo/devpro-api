@@ -19,6 +19,7 @@ import { MesorregiaoModule } from './base/nacional/mesorregiao/mesorregiao.modul
 import { MicrorregiaoModule } from './base/nacional/microrregiao/microrregiao.module';
 import { RegiaoIntermediariaModule } from './base/nacional/regiao-intermediaria/regiao-intermediaria.module';
 import { RegiaoImediataModule } from './base/nacional/regiao-imediata/regiao-imediata.module';
+import { MunicipioModule } from './base/nacional/municipio/municipio.module';
 import { CnaeModule } from './base/governo/cnae/cnae.module';
 import { NaturezaJuridicaModule } from './base/governo/natureza-juridica/natureza-juridica.module';
 import { GrupoTributarioModule } from './base/governo/grupo-tributario/grupo-tributario.module';
@@ -46,6 +47,7 @@ import { ArquivoModule } from './integracao/arquivo/arquivo.module';
     MicrorregiaoModule,
     RegiaoIntermediariaModule,
     RegiaoImediataModule,
+    MunicipioModule,
     CnaeModule,
     NaturezaJuridicaModule,
     GrupoTributarioModule,
