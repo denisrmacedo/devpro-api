@@ -1,5 +1,5 @@
 import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
-import { IsAlpha, IsArray, IsBoolean, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, IsUppercase, IsUrl, Length } from 'class-validator';
+import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, IsUrl, Length } from 'class-validator';
 
 import { Base, BaseTabela_ } from 'src/base/base';
 import { Regiao_ } from '../../regiao/modelo/regiao.entity';

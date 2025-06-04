@@ -5,21 +5,21 @@ import { Repository, MoreThan, FindManyOptions, Raw } from 'typeorm';
 import { Identificacao } from 'src/autenticacao/identificacao';
 import { AssistenteService, Pagina } from 'src/turbo/assistente.service';
 import { Modelo } from 'src/base/base';
-import { RegiaoIntermediaria, RegiaoIntermediariaSituacao } from './modelo/regiao-intermediaria.entity';
+import { RegiaoImediata, RegiaoImediataSituacao } from './modelo/regiao-imediata.entity';
 
 @Injectable()
-export class RegiaoIntermediariaService {
+export class RegiaoImediataService {
   constructor(
-    @InjectRepository(RegiaoIntermediaria, 'gravacao')
-    private readonly gravacaoRepository: Repository<RegiaoIntermediaria>,
-    @InjectRepository(RegiaoIntermediaria, 'leitura')
-    private readonly leituraRepository: Repository<RegiaoIntermediaria>,
+    @InjectRepository(RegiaoImediata, 'gravacao')
+    private readonly gravacaoRepository: Repository<RegiaoImediata>,
+    @InjectRepository(RegiaoImediata, 'leitura')
+    private readonly leituraRepository: Repository<RegiaoImediata>,
     private readonly assistente: AssistenteService,
   ) { }
 
-  async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<RegiaoIntermediaria>> {
+  async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<RegiaoImediata>> {
     this.assistente.adapta(criterios);
-    const options: FindManyOptions<RegiaoIntermediaria> = {
+    const options: FindManyOptions<RegiaoImediata> = {
       order: { situacao: 1, nome: 1 },
       relations: ['regiao', 'uf'],
       loadEagerRelations: false,
@@ -51,6 +51,12 @@ export class RegiaoIntermediariaService {
     if (criterios.ufCodigo) {
       options.where.uf = { codigo: Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.ufCodigo }) };
     }
+    if (criterios.regiaoIntermediariaId) {
+      options.where.regiaoIntermediaria = { id: criterios.regiaoIntermediariaId };
+    }
+    if (criterios.regiaoIntermediariaCodigo) {
+      options.where.regiaoIntermediaria = { codigo: Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.regiaoIntermediariaCodigo }) };
+    }
     const contagem = await this.leituraRepository.count(options);
     return this.leituraRepository.find(options)
       .then(
@@ -58,9 +64,9 @@ export class RegiaoIntermediariaService {
       );
   }
 
-  async sincroniza(identificacao: Identificacao, criterios: any): Promise<Pagina<RegiaoIntermediaria>> {
+  async sincroniza(identificacao: Identificacao, criterios: any): Promise<Pagina<RegiaoImediata>> {
     this.assistente.adapta(criterios, { sincronizacao: true });
-    const options: FindManyOptions<RegiaoIntermediaria> = {
+    const options: FindManyOptions<RegiaoImediata> = {
       where: { edicao: MoreThan(criterios.momento) },
       order: { edicao: 1 },
       skip: criterios.salto,
@@ -73,9 +79,9 @@ export class RegiaoIntermediariaService {
       );
   }
 
-  async lista(identificacao: Identificacao, criterios: any): Promise<RegiaoIntermediaria[]> {
+  async lista(identificacao: Identificacao, criterios: any): Promise<RegiaoImediata[]> {
     this.assistente.adapta(criterios);
-    const options: FindManyOptions<RegiaoIntermediaria> = {
+    const options: FindManyOptions<RegiaoImediata> = {
       select: { id: true, codigo: true, nome: true, imagem: true, situacao: true },
       order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,
@@ -99,53 +105,59 @@ export class RegiaoIntermediariaService {
     if (criterios.ufCodigo) {
       options.where.uf = { codigo: Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.ufCodigo }) };
     }
+    if (criterios.regiaoIntermediariaId) {
+      options.where.regiaoIntermediaria = { id: criterios.regiaoIntermediariaId };
+    }
+    if (criterios.regiaoIntermediariaCodigo) {
+      options.where.regiaoIntermediaria = { codigo: Raw((alias) => `versal(${alias}) = versal(:codigo)`, { codigo: criterios.regiaoIntermediariaCodigo }) };
+    }
     return this.leituraRepository.find(options);
   }
 
-  async busca(identificacao: Identificacao, criterios: any): Promise<RegiaoIntermediaria[]> {
-    const options: FindManyOptions<RegiaoIntermediaria> = {
+  async busca(identificacao: Identificacao, criterios: any): Promise<RegiaoImediata[]> {
+    const options: FindManyOptions<RegiaoImediata> = {
       order: { situacao: 1, nome: 1 },
     };
     options.where = [];
     return this.leituraRepository.find(options);
   }
 
-  async capta(identificacao: Identificacao, id: string): Promise<RegiaoIntermediaria> {
-    const regiaoIntermediaria = await this.assistente.cache.get<RegiaoIntermediaria>(id);
-    if (regiaoIntermediaria) {
-      return regiaoIntermediaria;
+  async capta(identificacao: Identificacao, id: string): Promise<RegiaoImediata> {
+    const regiaoImediata = await this.assistente.cache.get<RegiaoImediata>(id);
+    if (regiaoImediata) {
+      return regiaoImediata;
     }
     return this.gravacaoRepository.findOneOrFail({
       where: { id },
       loadEagerRelations: true,
-    }).then(regiaoIntermediaria => {
-      this.assistente.cache.set(regiaoIntermediaria.id, regiaoIntermediaria);
-      return regiaoIntermediaria;
+    }).then(regiaoImediata => {
+      this.assistente.cache.set(regiaoImediata.id, regiaoImediata);
+      return regiaoImediata;
     });
   }
-  async salva(identificacao: Identificacao, regiaoIntermediaria: RegiaoIntermediaria): Promise<RegiaoIntermediaria> {
-    regiaoIntermediaria.atuante = regiaoIntermediaria.situacao === RegiaoIntermediariaSituacao.Ativa;
-    await this.assistente.unico(this.gravacaoRepository, { regiaoIntermediaria }, {
+  async salva(identificacao: Identificacao, regiaoImediata: RegiaoImediata): Promise<RegiaoImediata> {
+    regiaoImediata.atuante = regiaoImediata.situacao === RegiaoImediataSituacao.Ativa;
+    await this.assistente.unico(this.gravacaoRepository, { regiaoImediata }, {
       codigo: 'código', nome: 'nome'
     });
-    const novo = regiaoIntermediaria.novo;
+    const novo = regiaoImediata.novo;
     return this.gravacaoRepository
-      .save(regiaoIntermediaria)
-      .then(async regiaoIntermediaria => {
-        await this.assistente.cache.set(regiaoIntermediaria.id, regiaoIntermediaria);
-        await this.assistente.audita(identificacao, regiaoIntermediaria, Modelo.RegiaoIntermediaria, novo, 'Região Intermediária: ' + regiaoIntermediaria.nome);
-        return regiaoIntermediaria;
+      .save(regiaoImediata)
+      .then(async regiaoImediata => {
+        await this.assistente.cache.set(regiaoImediata.id, regiaoImediata);
+        await this.assistente.audita(identificacao, regiaoImediata, Modelo.RegiaoImediata, novo, 'Região Imediata: ' + regiaoImediata.nome);
+        return regiaoImediata;
       });
   }
 
-  async remove(identificacao: Identificacao, id: string): Promise<RegiaoIntermediaria> {
-    const regiaoIntermediaria = await this.capta(identificacao, id);
+  async remove(identificacao: Identificacao, id: string): Promise<RegiaoImediata> {
+    const regiaoImediata = await this.capta(identificacao, id);
     return await this.gravacaoRepository
-      .softRemove(regiaoIntermediaria)
-      .then(async regiaoIntermediaria => {
-        await this.assistente.cache.del(regiaoIntermediaria.id);
-        await this.assistente.auditaExclusao(identificacao, regiaoIntermediaria, Modelo.RegiaoIntermediaria, 'Região Intermediária: ' + regiaoIntermediaria.nome);
-        return regiaoIntermediaria;
+      .softRemove(regiaoImediata)
+      .then(async regiaoImediata => {
+        await this.assistente.cache.del(regiaoImediata.id);
+        await this.assistente.auditaExclusao(identificacao, regiaoImediata, Modelo.RegiaoImediata, 'Região Imediata: ' + regiaoImediata.nome);
+        return regiaoImediata;
       })
   }
 }
