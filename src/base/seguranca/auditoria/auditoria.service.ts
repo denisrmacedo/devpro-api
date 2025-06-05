@@ -26,11 +26,11 @@ export class AuditoriaService {
     };
     if (criterios.recente)
       options.order = { edicao: 1 }
-    options.where = [];
+    options.where = {};
     if (criterios['usuario.id'])
-      options.where.push({ usuario: { id: criterios.usuario.id } });
+      options.where.usuario = { id: criterios.usuario.id };
     if (criterios['autorizacao.id'])
-      options.where.push({ autorizacao: { id: criterios.autorizacao.id } });
+      options.where.autorizacao = { id: criterios.autorizacao.id };
     const contagem = await this.gravacaoRepository.count(options);
     return this.leituraRepository.find(options)
       .then(
@@ -57,11 +57,11 @@ export class AuditoriaService {
     const options: FindManyOptions<Auditoria> = {
       order: { instante: 1 },
     };
-    options.where = [];
+    options.where = {};
     if (criterios['usuario.id'])
-      options.where.push({ usuario: { id: criterios.usuario.id } });
+      options.where.usuario = { id: criterios.usuario.id };
     if (criterios['autorizacao.id'])
-      options.where.push({ autorizacao: { id: criterios.autorizacao.id } });
+      options.where.autorizacao = { id: criterios.autorizacao.id };
     return this.leituraRepository.find(options);
   }
 

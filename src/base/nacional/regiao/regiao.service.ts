@@ -33,7 +33,7 @@ export class RegiaoService {
       options.where.situacao = criterios.situacao;
     }
     if (criterios.codigo) {
-      options.where.codigo = Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.codigo });
+      options.where.codigo = criterios.codigo.toUpperCase();
     }
     if (criterios.nome) {
       options.where.nome = Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome });
@@ -81,7 +81,7 @@ export class RegiaoService {
     const options: FindManyOptions<Regiao> = {
       order: { situacao: 1, nome: 1 },
     };
-    options.where = [];
+    options.where = {};
     return this.leituraRepository.find(options);
   }
 

@@ -28,15 +28,15 @@ export class OrganizacaoService {
     if (criterios.recente) {
       options.order = { edicao: 1 };
     }
-    options.where = [];
+    options.where = {};
     if (criterios.situacao) {
-      options.where.push({ situacao: criterios.situacao });
+      options.where.situacao = criterios.situacao;
     }
     if (criterios.codigo) {
-      options.where.push({ codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.codigo }) });
+      options.where.codigo = criterios.codigo.toUpperCase();
     }
     if (criterios.nome) {
-      options.where.push({ nome: Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome }) });
+      options.where.nome = Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome });
     }
     const contagem = await this.leituraRepository.count(options);
     const organizacoes = await this.leituraRepository.find(options);
@@ -215,9 +215,9 @@ export class OrganizacaoService {
     const options: FindManyOptions<Organizacao> = {
       order: { situacao: 1, nome: 1 },
     };
-    options.where = [];
+    options.where = {};
     if (criterios.super === '1') {
-      options.where.push({ super: true });
+      options.where.super = true;
     }
     return this.leituraRepository.find(options);
   }

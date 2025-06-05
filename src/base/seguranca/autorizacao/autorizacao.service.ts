@@ -27,12 +27,12 @@ export class AutorizacaoService {
     if (criterios.recente) {
       options.order = { edicao: 1 };
     }
-    options.where = [];
+    options.where = {};
     if (criterios.situacao) {
-      options.where.push({ situacao: criterios.situacao });
+      options.where.situacao = criterios.situacao;
     }
     if (criterios['usuario.id']) {
-      options.where.push({ usuario: { id: criterios.usuario.id } });
+      options.where.usuario = { id: criterios.usuario.id };
     }
     const contagem = await this.gravacaoRepository.count(options);
     return this.leituraRepository.find(options)
@@ -60,9 +60,9 @@ export class AutorizacaoService {
     const options: FindManyOptions<Autorizacao> = {
       order: { adicao: 1 },
     };
-    options.where = [];
+    options.where = {};
     if (criterios['usuario.id']) {
-      options.where.push({ usuario: { id: criterios.usuario.id } });
+      options.where.usuario = { id: criterios.usuario.id };
     }
     return this.leituraRepository.find(options);
   }

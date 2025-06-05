@@ -33,20 +33,18 @@ export class UsuarioService {
     if (criterios.recente) {
       options.order = { edicao: 1 }
     }
-    options.where = [];
+    options.where = {};
     if (criterios.situacao) {
-      options.where.push({ situacao: criterios.situacao });
+      options.where.situacao = criterios.situacao;
     }
     if (criterios.codigo) {
-      options.where.push({ codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.codigo }) });
+      options.where.codigo = criterios.codigo.toUpperCase();
     }
     if (criterios.nome) {
-      options.where.push({ nome: Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome }) });
+      options.where.nome = Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome });
     }
     if (criterios.email) {
-      options.where.push({
-        id: Raw((alias) => `${alias} IN (${this.assistente.consultaIds('administrativo.usuarioCredencial', 'usuarioId', { chave: criterios.email })})`)
-      });
+      options.where.id = Raw((alias) => `${alias} IN (${this.assistente.consultaIds('administrativo.usuarioCredencial', 'usuarioId', { chave: criterios.email })})`);
     }
     const contagem = await this.leituraRepository.count(options);
     const pagina = await this.leituraRepository.find(options)
@@ -117,12 +115,12 @@ export class UsuarioService {
       order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,
     };
-    options.where = [];
+    options.where = {};
     if (criterios.situacao) {
-      options.where.push({ situacao: criterios.situacao });
+      options.where.situacao = criterios.situacao;
     }
     if (criterios.nome) {
-      options.where.push({ nome: Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome }) });
+      options.where.nome = Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome });
     }
     const usuarios = await this.leituraRepository.find(options);
     for (const usuario of usuarios) {
@@ -166,12 +164,12 @@ export class UsuarioService {
     const options: FindManyOptions<Usuario> = {
       order: { situacao: 1, nome: 1 },
     };
-    options.where = [];
+    options.where = {};
     if (criterios.super === '1') {
-      options.where.push({ super: true });
+      options.where.super = true;
     }
     if (criterios.chave) {
-      options.where.push({ usuarioCredenciais: { chave: criterios.chave } });
+      options.where.usuarioCredenciais = { chave: criterios.chave };
     }
     return this.leituraRepository.find(options);
   }

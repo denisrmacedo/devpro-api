@@ -34,7 +34,7 @@ export class MicrorregiaoService {
       options.where.situacao = criterios.situacao;
     }
     if (criterios.codigo) {
-      options.where.codigo = Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.codigo });
+      options.where.codigo = criterios.codigo.toUpperCase();
     }
     if (criterios.nome) {
       options.where.nome = Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome });
@@ -43,19 +43,19 @@ export class MicrorregiaoService {
       options.where.regiao = { id: criterios.regiaoId };
     }
     if (criterios.regiaoCodigo) {
-      options.where.regiao = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.regiaoCodigo }) };
+      options.where.regiao = { codigo: criterios.regiaoCodigo.toUpperCase() };
     }
     if (criterios.ufId) {
       options.where.uf = { id: criterios.ufId };
     }
     if (criterios.ufCodigo) {
-      options.where.uf = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.ufCodigo }) };
+      options.where.uf = { codigo: criterios.ufCodigo.toUpperCase() };
     }
     if (criterios.mesorregiaoId) {
       options.where.mesorregiao = { id: criterios.mesorregiaoId };
     }
     if (criterios.mesorregiaoCodigo) {
-      options.where.mesorregiao = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.mesorregiaoCodigo }) };
+      options.where.mesorregiao = { codigo: criterios.mesorregiaoCodigo.toUpperCase() };
     }
     const contagem = await this.leituraRepository.count(options);
     return this.leituraRepository.find(options)
@@ -97,19 +97,19 @@ export class MicrorregiaoService {
       options.where.regiao = { id: criterios.regiaoId };
     }
     if (criterios.regiaoCodigo) {
-      options.where.regiao = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.regiaoCodigo }) };
+      options.where.regiao = { codigo: Raw((alias) => `${alias} = upper(:regiaoCodigo)`, { regiaoCodigo: criterios.regiaoCodigo }) };
     }
     if (criterios.ufId) {
       options.where.uf = { id: criterios.ufId };
     }
     if (criterios.ufCodigo) {
-      options.where.uf = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.ufCodigo }) };
+      options.where.uf = { codigo: Raw((alias) => `${alias} = upper(:ufCodigo)`, { ufCodigo: criterios.ufCodigo }) };
     }
     if (criterios.mesorregiaoId) {
       options.where.mesorregiao = { id: criterios.mesorregiaoId };
     }
     if (criterios.mesorregiaoCodigo) {
-      options.where.mesorregiao = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.mesorregiaoCodigo }) };
+      options.where.mesorregiao = { codigo: Raw((alias) => `${alias} = upper(:mesorregiaoCodigo)`, { mesorregiaoCodigo: criterios.mesorregiaoCodigo }) };
     }
     return this.leituraRepository.find(options);
   }
@@ -118,7 +118,7 @@ export class MicrorregiaoService {
     const options: FindManyOptions<Microrregiao> = {
       order: { situacao: 1, nome: 1 },
     };
-    options.where = [];
+    options.where = {};
     return this.leituraRepository.find(options);
   }
 

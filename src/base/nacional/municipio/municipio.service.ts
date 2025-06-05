@@ -34,7 +34,7 @@ export class MunicipioService {
       options.where.situacao = criterios.situacao;
     }
     if (criterios.codigo) {
-      options.where.codigo = Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.codigo });
+      options.where.codigo = criterios.codigo.toUpperCase();
     }
     if (criterios.nome) {
       options.where.nome = Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome });
@@ -43,37 +43,37 @@ export class MunicipioService {
       options.where.regiao = { id: criterios.regiaoId };
     }
     if (criterios.regiaoCodigo) {
-      options.where.regiao = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.regiaoCodigo }) };
+      options.where.regiao = { codigo: criterios.regiaoCodigo.toUpperCase() };
     }
     if (criterios.ufId) {
       options.where.uf = { id: criterios.ufId };
     }
     if (criterios.ufCodigo) {
-      options.where.uf = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.ufCodigo }) };
+      options.where.uf = { codigo: criterios.ufCodigo.toUpperCase() };
     }
     if (criterios.mesorregiaoId) {
       options.where.mesorregiao = { id: criterios.mesorregiaoId };
     }
     if (criterios.mesorregiaoCodigo) {
-      options.where.mesorregiao = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.mesorregiaoCodigo }) };
+      options.where.mesorregiao = { codigo: criterios.mesorregiaoCodigo.toUpperCase() };
     }
     if (criterios.microrregiaoId) {
       options.where.microrregiao = { id: criterios.microrregiaoId };
     }
     if (criterios.microrregiaoCodigo) {
-      options.where.microrregiao = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.microrregiaoCodigo }) };
+      options.where.microrregiao = { codigo: criterios.microrregiaoCodigo.toUpperCase() };
     }
     if (criterios.regiaoIntermediariaId) {
       options.where.regiaoIntermediaria = { id: criterios.regiaoIntermediariaId };
     }
     if (criterios.regiaoIntermediariaCodigo) {
-      options.where.regiaoIntermediaria = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.regiaoIntermediariaCodigo }) };
+      options.where.regiaoIntermediaria = { codigo: criterios.regiaoIntermediariaCodigo.toUpperCase() };
     }
     if (criterios.regiaoImediataId) {
       options.where.regiaoImediata = { id: criterios.regiaoImediataId };
     }
     if (criterios.regiaoImediataCodigo) {
-      options.where.regiaoImediata = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.regiaoImediataCodigo }) };
+      options.where.regiaoImediata = { codigo: criterios.regiaoImediataCodigo.toUpperCase() };
     }
     const contagem = await this.leituraRepository.count(options);
     return this.leituraRepository.find(options)
@@ -115,13 +115,13 @@ export class MunicipioService {
       options.where.regiao = { id: criterios.regiaoId };
     }
     if (criterios.regiaoCodigo) {
-      options.where.regiao = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.regiaoCodigo }) };
+      options.where.regiao = { codigo: criterios.regiaoCodigo.toUpperCase() };
     }
     if (criterios.ufId) {
       options.where.uf = { id: criterios.ufId };
     }
     if (criterios.ufCodigo) {
-      options.where.uf = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.ufCodigo }) };
+      options.where.uf = { codigo: criterios.ufCodigo.toUpperCase() };
     }
     return this.leituraRepository.find(options);
   }
@@ -130,7 +130,7 @@ export class MunicipioService {
     const options: FindManyOptions<Municipio> = {
       order: { situacao: 1, nome: 1 },
     };
-    options.where = [];
+    options.where = {};
     return this.leituraRepository.find(options);
   }
 

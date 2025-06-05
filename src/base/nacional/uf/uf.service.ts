@@ -34,7 +34,7 @@ export class UfService {
       options.where.situacao = criterios.situacao;
     }
     if (criterios.codigo) {
-      options.where.codigo = Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.codigo });
+      options.where.codigo = criterios.codigo.toUpperCase();
     }
     if (criterios.nome) {
       options.where.nome = Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome });
@@ -43,7 +43,7 @@ export class UfService {
       options.where.regiao = { id: criterios.regiaoId };
     }
     if (criterios.regiaoCodigo) {
-      options.where.regiao = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.regiaoCodigo }) };
+      options.where.regiao = { codigo: criterios.regiaoCodigo.toUpperCase() };
     }
     const contagem = await this.leituraRepository.count(options);
     return this.leituraRepository.find(options)
@@ -85,7 +85,7 @@ export class UfService {
       options.where.regiao = { id: criterios.regiaoId };
     }
     if (criterios.regiaoCodigo) {
-      options.where.regiao = { codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.regiaoCodigo }) };
+      options.where.regiao = { codigo: Raw((alias) => `${alias} = upper(:regiaoCodigo)`, { regiaoCodigo: criterios.regiaoCodigo }) };
     }
     return this.leituraRepository.find(options);
   }
@@ -94,7 +94,7 @@ export class UfService {
     const options: FindManyOptions<Uf> = {
       order: { situacao: 1, nome: 1 },
     };
-    options.where = [];
+    options.where = {};
     return this.leituraRepository.find(options);
   }
 

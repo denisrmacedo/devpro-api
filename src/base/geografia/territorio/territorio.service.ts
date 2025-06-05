@@ -28,18 +28,18 @@ export class TerritorioService {
     if (criterios.recente) {
       options.order = { edicao: 1 };
     }
-    options.where = [];
+    options.where = {};
     if (criterios.paisId) {
-      options.where.push({ pais: { id: criterios.paisId } });
+      options.where.pais = { id: criterios.paisId };
     }
     if (criterios.situacao) {
-      options.where.push({ situacao: criterios.situacao });
+      options.where.situacao = criterios.situacao;
     }
     if (criterios.codigo) {
-      options.where.push({ codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.codigo }) });
+      options.where.codigo = criterios.codigo.toUpperCase();
     }
     if (criterios.nome) {
-      options.where.push({ nome: Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome }) });
+      options.where.nome = Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome });
     }
     const contagem = await this.leituraRepository.count(options);
     const territorioes = await this.leituraRepository.find(options);
@@ -68,12 +68,12 @@ export class TerritorioService {
       order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,
     };
-    options.where = [];
+    options.where = {};
     if (criterios.paisId) {
-      options.where.push({ pais: { id: criterios.paisId } });
+      options.where.pais = { id: criterios.paisId };
     }
     if (criterios.atuante) {
-      options.where.push({ atuante: true });
+      options.where.atuante = true;
     }
     return this.leituraRepository.find(options);
   }
@@ -82,9 +82,9 @@ export class TerritorioService {
     const options: FindManyOptions<Territorio> = {
       order: { situacao: 1, nome: 1 },
     };
-    options.where = [];
+    options.where = {};
     if (criterios.paisId) {
-      options.where.push({ pais: { id: criterios.paisId } });
+      options.where.pais = { id: criterios.paisId };
     }
     return this.leituraRepository.find(options);
   }

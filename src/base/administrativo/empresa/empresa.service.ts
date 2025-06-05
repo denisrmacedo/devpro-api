@@ -28,15 +28,16 @@ export class EmpresaService {
     if (criterios.recente) {
       options.order = { edicao: 1 };
     }
-    options.where = [{ organizacao: { id: identificacao.organizacao.id } }];
+    options.where = {};
+    options.where.organizacao = { id: identificacao.organizacao.id };
     if (criterios.situacao) {
-      options.where.push({ situacao: criterios.situacao });
+      options.where.situacao = criterios.situacao;
     }
     if (criterios.codigo) {
-      options.where.push({ codigo: Raw((alias) => `${alias} = upper(:codigo)`, { codigo: criterios.codigo }) });
+      options.where.codigo = criterios.codigo.toUpperCase();
     }
     if (criterios.nome) {
-      options.where.push({ nome: Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome }) });
+      options.where.nome = Raw((alias) => `versal(${alias}) LIKE versal(:nome)`, { nome: criterios.nome });
     }
     const contagem = await this.leituraRepository.count(options);
     return this.leituraRepository.find(options)
@@ -71,9 +72,10 @@ export class EmpresaService {
       loadEagerRelations: false,
     };
     criterios.organizacaoId ??= identificacao.organizacao.id;
-    options.where = [{ organizacao: { id: criterios.organizacaoId }}];
+    options.where = {};
+    options.where.organizacao = { id: criterios.organizacaoId };
     if (criterios.atuante) {
-      options.where.push({ atuante: true });
+      options.where.atuante = true;
     }
     return this.leituraRepository.find(options);
   }
@@ -82,7 +84,7 @@ export class EmpresaService {
     const options: FindManyOptions<Empresa> = {
       order: { situacao: 1, nome: 1 },
     };
-    options.where = [];
+    options.where = {};
     return this.leituraRepository.find(options);
   }
 
