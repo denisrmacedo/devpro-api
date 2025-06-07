@@ -2,9 +2,9 @@ import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
 import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, IsUrl, Length } from 'class-validator';
 
 import { Base, BaseTabela_ } from 'src/base/base';
-import { Pais_ } from 'src/base/geografia/pais/modelo/pais.entity';
+import { Pais_ } from 'src/base/global/pais/modelo/pais.entity';
 
-@Entity('geografia.territorio')
+@Entity('global.territorio')
 export class Territorio extends Base {
   @IsNotEmpty()
   @IsObject()
@@ -70,5 +70,5 @@ export enum TerritorioSituacao {
   Inativo = 9,
 }
 
-@Entity('geografia.territorio')
+@Entity('global.territorio')
 export class Territorio_ extends BaseTabela_ { }

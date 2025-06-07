@@ -6,7 +6,7 @@ import { Pagina } from 'src/turbo/assistente.service';
 import { Pais } from './modelo/pais.entity';
 import { PaisService } from './pais.service';
 
-@Controller('base/geografia/pais')
+@Controller('base/global/pais')
 export class PaisController {
   constructor(private readonly paisService: PaisService) {}
 

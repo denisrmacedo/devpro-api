@@ -6,7 +6,7 @@ import { Pagina } from 'src/turbo/assistente.service';
 import { Territorio } from './modelo/territorio.entity';
 import { TerritorioService } from './territorio.service';
 
-@Controller('base/geografia/territorio')
+@Controller('base/global/territorio')
 export class TerritorioController {
   constructor(private readonly territorioService: TerritorioService) {}
 

@@ -5,7 +5,7 @@ import { Type } from 'class-transformer';
 import { Base, BaseTabela_ } from 'src/base/base';
 import { Territorio } from '../../territorio/modelo/territorio.entity';
 
-@Entity('geografia.pais')
+@Entity('global.pais')
 export class Pais extends Base {
   @IsOptional()
   @IsString() @Length(3)
@@ -99,5 +99,5 @@ export enum PaisSituacao {
   Inativo = 9,
 }
 
-@Entity('geografia.pais')
+@Entity('global.pais')
 export class Pais_ extends BaseTabela_ { }
