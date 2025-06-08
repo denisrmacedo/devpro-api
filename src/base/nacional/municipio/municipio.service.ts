@@ -150,7 +150,7 @@ export class MunicipioService {
   async salva(identificacao: Identificacao, municipio: Municipio): Promise<Municipio> {
     municipio.atuante = municipio.situacao === MunicipioSituacao.Ativa;
     await this.assistente.unico(this.gravacaoRepository, { municipio }, {
-      codigo: 'código', nome: 'nome'
+      codigo: 'código'
     });
     const novo = municipio.novo;
     return this.gravacaoRepository

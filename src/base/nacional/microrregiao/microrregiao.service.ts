@@ -21,7 +21,7 @@ export class MicrorregiaoService {
     this.assistente.adapta(criterios);
     const options: FindManyOptions<Microrregiao> = {
       order: { situacao: 1, nome: 1 },
-      relations: ['regiao', 'uf'],
+      relations: ['regiao', 'uf', 'mesorregiao'],
       loadEagerRelations: false,
       skip: criterios.salto,
       take: criterios.linhas,

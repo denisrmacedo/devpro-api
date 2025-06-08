@@ -6,7 +6,7 @@ import { Base, BaseTabela_ } from 'src/base/base';
 @Entity('nacional.regiao')
 export class Regiao extends Base {
   @IsOptional()
-  @IsString() @Length(3)
+  @IsString() @Length(1)
   @Column('varchar')
   codigo: string;
 

@@ -7,7 +7,7 @@ import { Regiao_ } from '../../regiao/modelo/regiao.entity';
 @Entity('nacional.uf')
 export class Uf extends Base {
   @IsOptional()
-  @IsString() @Length(3)
+  @IsString() @Length(2)
   @Column('varchar')
   codigo: string;
 
@@ -17,7 +17,7 @@ export class Uf extends Base {
   nome: string;
 
   @IsNotEmpty()
-  @IsString() @Length(2, 2) @IsUppercase() @IsAlpha()
+  @IsString() @Length(2) @IsUppercase() @IsAlpha()
   @Column('varchar')
   sigla: string;
 
@@ -67,6 +67,9 @@ export enum UfSituacao {
 
 @Entity('nacional.uf')
 export class Uf_ extends BaseTabela_ {
+  @Column()
+  sigla: string;
+
   @Column()
   imagem: string;
 }

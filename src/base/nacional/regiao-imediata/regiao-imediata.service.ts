@@ -21,7 +21,7 @@ export class RegiaoImediataService {
     this.assistente.adapta(criterios);
     const options: FindManyOptions<RegiaoImediata> = {
       order: { situacao: 1, nome: 1 },
-      relations: ['regiao', 'uf'],
+      relations: ['regiao', 'uf', 'regiaoIntermediaria'],
       loadEagerRelations: false,
       skip: criterios.salto,
       take: criterios.linhas,
