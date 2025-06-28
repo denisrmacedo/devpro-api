@@ -18,7 +18,7 @@ export class TerritorioService {
   ) { }
 
   async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<Territorio>> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<Territorio> = {
       order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,
@@ -62,7 +62,7 @@ export class TerritorioService {
   }
 
   async lista(identificacao: Identificacao, criterios: any): Promise<Territorio[]> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<Territorio> = {
       select: { id: true, codigo: true, nome: true, situacao: true },
       order: { situacao: 1, nome: 1 },

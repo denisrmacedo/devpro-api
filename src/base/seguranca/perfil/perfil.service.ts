@@ -18,7 +18,7 @@ export class PerfilService {
   ) { }
 
   async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<Perfil>> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<Perfil> = {
       order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,
@@ -61,7 +61,7 @@ export class PerfilService {
   }
 
   async lista(identificacao: Identificacao, criterios: any): Promise<Perfil[]> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<Perfil> = {
       order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,

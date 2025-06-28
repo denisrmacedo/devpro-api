@@ -18,7 +18,7 @@ export class UfService {
   ) { }
 
   async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<Uf>> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<Uf> = {
       order: { situacao: 1, nome: 1 },
       relations: ['regiao'],
@@ -68,7 +68,7 @@ export class UfService {
   }
 
   async lista(identificacao: Identificacao, criterios: any): Promise<Uf[]> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<Uf> = {
       select: { id: true, codigo: true, nome: true, imagem: true, situacao: true },
       order: { situacao: 1, nome: 1 },

@@ -63,7 +63,7 @@ export class AssistenteService {
     return this.cacheService;
   }
 
-  adapta(criterios: any, opcoes: { sincronizacao: boolean } = { sincronizacao: false }) {
+  adapta(identificacao: Identificacao, criterios: any, opcoes: { sincronizacao?: boolean; utc?: boolean } = { sincronizacao: false, utc: false }): any {
     criterios ??= {};
     criterios.pagina = +criterios.pagina || 1;
     criterios.linhas = +criterios.linhas || 100;
@@ -92,15 +92,20 @@ export class AssistenteService {
       criterios.situacao = 1;
     }
     if (criterios.intervalo) {
-      this.intervalo(criterios);
+      this.intervalo(identificacao, criterios, opcoes.utc);
     }
   }
 
-  intervalo(criterios: any) {
+  intervalo(identificacao: Identificacao, criterios: any, utc: boolean): void {
     if (!criterios.intervalo) {
       return;
     }
-    const agora = DateTime.now();
+    var agora: DateTime;
+    if (utc) {
+      agora = DateTime.now().toUTC();
+    } else {
+      agora = DateTime.now();
+    }
     var inicio: DateTime;
     var conclusao: DateTime;
     switch (criterios.intervalo) {

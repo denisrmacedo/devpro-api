@@ -18,7 +18,7 @@ export class FilialService {
   ) { }
 
   async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<Filial>> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<Filial> = {
       order: { situacao: 1, super: -1, nome: 1 },
       loadEagerRelations: false,
@@ -65,7 +65,7 @@ export class FilialService {
   }
 
   async lista(identificacao: Identificacao, criterios: any): Promise<Filial[]> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<Filial> = {
       select: { id: true, nome: true, situacao: true },
       order: { situacao: 1, super: -1, nome: 1 },

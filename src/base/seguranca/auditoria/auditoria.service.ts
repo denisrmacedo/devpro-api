@@ -17,7 +17,7 @@ export class AuditoriaService {
   ) {}
 
   async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<Auditoria>> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<Auditoria> = {
       order: { instante: 1 },
       loadEagerRelations: false,

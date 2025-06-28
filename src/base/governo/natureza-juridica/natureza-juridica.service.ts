@@ -18,7 +18,7 @@ export class NaturezaJuridicaService {
   ) { }
 
   async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<NaturezaJuridica>> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<NaturezaJuridica> = {
       order: { situacao: 1, nivel: 1 },
       loadEagerRelations: false,
@@ -59,7 +59,7 @@ export class NaturezaJuridicaService {
   }
 
   async lista(identificacao: Identificacao, criterios: any): Promise<NaturezaJuridica[]> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<NaturezaJuridica> = {
       select: { id: true, codigo: true, nome: true, situacao: true },
       order: { situacao: 1, nome: 1 },

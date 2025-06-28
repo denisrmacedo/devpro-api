@@ -18,7 +18,7 @@ export class GrupoTributarioService {
   ) { }
 
   async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<GrupoTributario>> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<GrupoTributario> = {
       order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,
@@ -59,7 +59,7 @@ export class GrupoTributarioService {
   }
 
   async lista(identificacao: Identificacao, criterios: any): Promise<GrupoTributario[]> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<GrupoTributario> = {
       select: { id: true, codigo: true, nome: true, situacao: true },
       order: { situacao: 1, nome: 1 },

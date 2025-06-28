@@ -17,7 +17,7 @@ export class AutorizacaoService {
   ) {}
 
   async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<Autorizacao>> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<Autorizacao> = {
       order: { inicio: 1 },
       loadEagerRelations: false,

@@ -18,7 +18,7 @@ export class EmpresaService {
   ) { }
 
   async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<Empresa>> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<Empresa> = {
       order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,
@@ -65,7 +65,7 @@ export class EmpresaService {
   }
 
   async lista(identificacao: Identificacao, criterios: any): Promise<Empresa[]> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<Empresa> = {
       select: { id: true, nome: true, situacao: true },
       order: { situacao: 1, nome: 1 },

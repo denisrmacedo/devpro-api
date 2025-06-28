@@ -18,7 +18,7 @@ export class ServidorService {
   ) { }
 
   async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<Servidor>> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<Servidor> = {
       order: { situacao: 1, super: -1, nome: 1 },
       loadEagerRelations: false,

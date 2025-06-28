@@ -1,10 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, MoreThan, FindManyOptions, Raw } from 'typeorm';
 
 import { Identificacao } from 'src/autenticacao/identificacao';
-import { AssistenteService, Pagina } from 'src/turbo/assistente.service';
-import { Modelo } from 'src/base/base';
+import { AssistenteService } from 'src/turbo/assistente.service';
 
 @Injectable()
 export class DashboardService {
@@ -15,7 +12,7 @@ export class DashboardService {
   async resumo(identificacao: Identificacao, criterios: any): Promise<any> {
     criterios ??= {};
     criterios.intervalo ??= 'todos';
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios, { utc: true });
     const consulta: string[] = [];
     consulta.push(`WITH`);
     consulta.push(`usuario AS (`);

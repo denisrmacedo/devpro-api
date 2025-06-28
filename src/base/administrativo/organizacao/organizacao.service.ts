@@ -18,7 +18,7 @@ export class OrganizacaoService {
   ) { }
 
   async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<Organizacao>> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<Organizacao> = {
       order: { situacao: 1, super: -1, nome: 1 },
       loadEagerRelations: false,
@@ -199,7 +199,7 @@ export class OrganizacaoService {
   }
 
   async lista(identificacao: Identificacao, criterios: any): Promise<Organizacao[]> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<Organizacao> = {
       select: { id: true, nome: true, imagem: true, situacao: true },
       order: { situacao: 1, super: -1, nome: 1 },

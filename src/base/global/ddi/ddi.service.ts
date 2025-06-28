@@ -18,7 +18,7 @@ export class DdiService {
   ) { }
 
   async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<Ddi>> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<Ddi> = {
       order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,
@@ -86,7 +86,7 @@ export class DdiService {
   }
 
   async lista(identificacao: Identificacao, criterios: any): Promise<Ddi[]> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     // const query = this.leituraRepository
     //   .createQueryBuilder('ddi')
     //   .select(['id', 'codigo', 'nome', 'imagem', 'situacao'])

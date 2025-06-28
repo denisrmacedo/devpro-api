@@ -18,7 +18,7 @@ export class PaisService {
   ) { }
 
   async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<Pais>> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<Pais> = {
       order: { situacao: 1, nome: 1 },
       loadEagerRelations: false,
@@ -86,7 +86,7 @@ export class PaisService {
   }
 
   async lista(identificacao: Identificacao, criterios: any): Promise<Pais[]> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const query = this.leituraRepository
       .createQueryBuilder('pais')
       .select(['id', 'codigo', 'nome', 'imagem', 'situacao'])

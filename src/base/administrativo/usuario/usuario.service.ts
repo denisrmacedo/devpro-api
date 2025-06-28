@@ -22,7 +22,7 @@ export class UsuarioService {
   ) { }
 
   async indice(identificacao: Identificacao, criterios: any): Promise<Pagina<Usuario>> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<Usuario> = {
       relations: { usuarioCredenciais: true, usuarioOrganizacoes: true },
       order: { situacao: 1, nome: 1 },
@@ -108,7 +108,7 @@ export class UsuarioService {
   }
 
   async lista(identificacao: Identificacao, criterios: any): Promise<Usuario[]> {
-    this.assistente.adapta(criterios);
+    this.assistente.adapta(identificacao, criterios);
     const options: FindManyOptions<Usuario> = {
       select: { id: true, codigo: true, nome: true, imagem: true, situacao: true },
       relations: { usuarioCredenciais: true, usuarioOrganizacoes: true },
@@ -247,7 +247,7 @@ export class UsuarioService {
         loadEagerRelations: false,
       });
     if (!parametros.organizacao) {
-      this.assistente.incoerencia('Organizacao inválida');
+      this.assistente.incoerencia('Organização inválida');
     }
     if (parametros.associa) {
       if (!usuario.usuarioOrganizacoes.find(usuarioOrganizacao => usuarioOrganizacao.organizacao.id === parametros.organizacao.id)) {
