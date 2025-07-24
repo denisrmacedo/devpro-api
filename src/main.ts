@@ -32,7 +32,7 @@ async function bootstrap() {
 
   const { name, version } = require(join(process.cwd(), 'package.json'));
 
-  await app.listen(+process.env.PORT || 3000, (err, address) => {
+  await app.listen(+process.env.PORT || 3000, '0.0.0.0', (err, address) => {
     if (aplicativo.nome.localeCompare(name, undefined, { sensitivity: 'base' })) {
       Logger.error(`Informações divergentes com o arquivo package.json "name" ${aplicativo.nome} != ${name}`);
     }
